@@ -57,7 +57,7 @@ command -> command pipe command.
 command -> assignment.
 command -> atom.
 command -> exit_token.
-command -> word. (Благодаря этому работает пример с $x$y)
+command -> word.
 
 assignment -> var_name assign word.
 
