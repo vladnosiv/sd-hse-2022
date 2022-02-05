@@ -47,8 +47,8 @@ exit          : exit_token.
 * Парсер команд (Оставляет аргументы как есть)
 
 ```
-Nontermials command, assignment, atom, function, var_name.
-Terminals pipe, word, args.
+Nontermials command, assignment, atom, function, var_name, args.
+Terminals pipe, word, double_quote, double_quote_interior, single_quote, single_quote_interior.
 Rootsymbol command.
 
 Left pipe. (Левоасс. оператор)
@@ -64,23 +64,15 @@ assignment -> var_name assign word.
 atom -> function.
 atom -> function args.
 
-var_name -> word.
-function -> word.
-```
-
-* Парсер аргументов
-
-```
-Nonterminals args.
-Terminals double_quote, double_quote_interior, single_quote, single_quote_interior.
-Rootsymbol args.
-
 args -> arg.
 args -> arg args.
 
 arg -> word.
 arg -> double_quote double_quote_interior double_quote.
 arg -> single_quote single_quote_interior single_quote.
+
+var_name -> word.
+function -> word.
 ```
 
 ## Архитектурные сущности
@@ -104,22 +96,11 @@ arg -> single_quote single_quote_interior single_quote.
 Правила для лексера описаны выше, от программиста требуется перевести 
 правила в код, согласно формату библиотеки [PLY](https://github.com/dabeaz/ply).
 
-### ArgumentsParser
-
-Парсер для аргументов функции. Принимает список токенов, возвращает AST по грамматике
-аргументов.
-
-Вынесен отдельно, чтобы вызывать для результатов команды, когда требуется
-передача по пайплайну.
-
 ### CommandParser
 
 Парсер для первичной обработки команды. Принимает список токенов, возвращает
 AST, построенное с помощью библиотеки [PLY](https://github.com/dabeaz/ply)
 по грамматике, приведенной выше.
-
-После получения AST дополнительно обходит дерево и ищет узлы аргументов (
-которые остались терминальными по грамматике) и вызывает для них `ArgumentsParser`.
 
 На выходе AST является полностью разобранной командой.
 
