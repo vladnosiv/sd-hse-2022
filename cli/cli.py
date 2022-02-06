@@ -17,4 +17,5 @@ class CLI():
 		:param output: an output to show
 		"""
 
-		print(output)
+		if len(output) > 0:
+			print(output)

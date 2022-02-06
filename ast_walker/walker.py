@@ -26,9 +26,9 @@ class ASTWalker:
         elif command == 'func_with_args':
             function_name = ast[1]
             args = ast[2]
-            return FunctionExecutor.execute(function_name, input_stream, *args)
+            return FunctionExecutor.execute_function(function_name, input_stream, *args)
         elif command == 'func':
-             function_name = ast[1]
-            return FunctionExecutor.execute(function_name, input_stream)
+            function_name = ast[1]
+            return FunctionExecutor.execute_function(function_name, input_stream)
         else:
             raise KeyError(f'unknown command {command}')

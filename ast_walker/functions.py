@@ -4,12 +4,16 @@ from os import getcwd
 
 
 @FunctionHolder.shell_function('cat')
-def cat(input_stream):
+def cat(input_stream, *args):
     returncode = 0
     out = BytesIO()
     err = BytesIO()
 
-    filename = input_stream.getvalue().decode()
+    if len(args) == 0:
+        filename = input_stream.getvalue().decode()
+    else:
+        filename = args[0]
+
     try:
         with open(filename, 'r') as file:
             out.write(file.read().encode())
@@ -24,23 +28,30 @@ def cat(input_stream):
 
 
 @FunctionHolder.shell_function('echo')
-def echo(input_stream):
+def echo(input_stream, *args):
     returncode = 0
     out = BytesIO()
     err = BytesIO()
 
-    out.write(b' '.join(input_stream.getvalue().split()))
+    if len(args) == 0:
+        out.write(' '.join(input_stream.getvalue().split()).encode())
+    else:
+        out.write(' '.join(args).encode())
 
     return returncode, out, err
 
 
 @FunctionHolder.shell_function('wc')
-def wc(input_stream):
+def wc(input_stream, *args):
     returncode = 0
     out = BytesIO()
     err = BytesIO()
 
-    content = input_stream.getvalue()
+    if len(args) == 0:
+        content = input_stream.getvalue()
+    else:
+        content = args[0]
+
     lines_count = len(content.split(b'\n'))
     words_count = len(content.split())
     bytes_count = len(content)
@@ -51,7 +62,7 @@ def wc(input_stream):
 
 
 @FunctionHolder.shell_function('pwd')
-def pwd(input_stream):
+def pwd(input_stream, *args):
     returncode = 0
     out = BytesIO()
     err = BytesIO()
@@ -62,5 +73,5 @@ def pwd(input_stream):
 
 
 @FunctionHolder.shell_function('exit')
-def shell_exit(input_stream):
+def shell_exit(input_stream, *args):
     exit()

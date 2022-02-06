@@ -15,9 +15,7 @@ class Main():
 	def __init__(self):
 		self.__cli    = CLI()
 		self.__subs   = Substitute()
-		self.__lexer  = Lexer()
 		self.__parser = CommandParser()
-		self.__walker = ASTWalker()
 
 	def run(self):
 		"""
@@ -29,7 +27,7 @@ class Main():
 			derefed = self.__subs.deref(command)
 
 			try:
-				ast = self.__parser.parse(tokens)
+				ast = self.__parser.parse(derefed)
 				if ast is None:
 					self.__cli.write('Grammar error')
 					continue
@@ -39,9 +37,15 @@ class Main():
 				self.__cli.write('^')
 				continue
 
-			code, out, err = self.__walker.execute(ast)
+			code, out, err = ASTWalker.execute(ast)
+
+			out.seek(0)
+			err.seek(0)
 			self.__cli.write(err.read().decode("utf-8"))
 			self.__cli.write(out.read().decode("utf-8"))
+
 			if code != 0:
 				return code
-		
+
+if __name__ == '__main__':
+	Main().run()
