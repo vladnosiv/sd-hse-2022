@@ -1,5 +1,4 @@
 import sys
-sys.path.append('./src')
 from io import BytesIO
 from ply.lex import LexError
 from cli import CLI
