@@ -36,8 +36,8 @@ class Main():
 			ast = self.__parser.parse(tokens)
 			code, out, err = self.__walker.execute(ast)
 			
-			print(err.read().decode("utf-8"))
-			print(out.read().decode("utf-8"))
+			self.__cli.write(err.read().decode("utf-8"))
+			self.__cli.write(out.read().decode("utf-8"))
 			if code != 0:
 				return code
 
