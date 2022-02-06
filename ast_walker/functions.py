@@ -11,8 +11,11 @@ def cat(input_stream, *args):
 
     if len(args) == 0:
         filename = input_stream.getvalue().decode()
-    else:
+    elif len(args) == 1:
         filename = args[0]
+    else:
+        err.write('args must contatins one filename')
+        return 1, out, err
 
     try:
         with open(filename, 'r') as file:
@@ -33,10 +36,8 @@ def echo(input_stream, *args):
     out = BytesIO()
     err = BytesIO()
 
-    if len(args) == 0:
-        out.write(' '.join(input_stream.getvalue().split()).encode())
-    else:
-        out.write(' '.join(args).encode())
+    out.write(b' '.join(map(str.encode, args)))
+    out.write(b' '.join(input_stream.getvalue().split()))
 
     return returncode, out, err
 
@@ -49,8 +50,15 @@ def wc(input_stream, *args):
 
     if len(args) == 0:
         content = input_stream.getvalue()
+    elif len(args) == 1:
+        cat_code, cat_out, cat_err = cat(BytesIO(args[0].encode()))
+        content = cat_out.getvalue()
+
+        if cat_code != 0:
+            return cat_code, out, cat_err
     else:
-        content = args[0]
+        err.write('args must contatins one filename')
+        return 1, out, err
 
     lines_count = len(content.split(b'\n'))
     words_count = len(content.split())
@@ -62,7 +70,7 @@ def wc(input_stream, *args):
 
 
 @FunctionHolder.shell_function('pwd')
-def pwd(input_stream, *args):
+def pwd(input_stream):
     returncode = 0
     out = BytesIO()
     err = BytesIO()
@@ -73,5 +81,5 @@ def pwd(input_stream, *args):
 
 
 @FunctionHolder.shell_function('exit')
-def shell_exit(input_stream, *args):
+def shell_exit(input_stream):
     exit()

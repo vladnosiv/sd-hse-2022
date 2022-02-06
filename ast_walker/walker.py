@@ -8,14 +8,14 @@ class ASTWalker:
         command = ast[0]
 
         if command == 'pipe':
-            left, rigth = ast[1:]
+            left, right = ast[1:]
 
-            returncode_left, out_left, err_left = execute(left, BytesIO())
+            returncode_left, out_left, err_left = ASTWalker.execute(left, BytesIO())
 
-            if returncode != 0:
+            if returncode_left != 0:
                 return returncode_left, out_left, err_left
 
-            returncode_right, out_right, err_right = execute(right, out_left)
+            returncode_right, out_right, err_right = ASTWalker.execute(right, out_left)
 
             returncode = returncode_right
             out = out_right
