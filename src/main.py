@@ -1,11 +1,11 @@
 import sys
 sys.path.append('./src')
 from io import BytesIO
-from modules.cli import CLI
-from modules.substitute import Substitute
-from modules.lexer import Lexer
-from modules.parser import CommandParser
-from modules.ast_walker.ast_walker import ASTWalker
+from cli import CLI
+from substitute import Substitute
+from lexer import Lexer
+from parser import CommandParser
+from ast_walker import ASTWalker
 
 
 class Main():
