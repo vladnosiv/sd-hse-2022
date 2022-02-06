@@ -3,8 +3,14 @@ from ast_walker.executor import FunctionExecutor
 
 
 class ASTWalker:
+    '''
+        A class that walks the passed AST
+    '''
     @staticmethod
     def execute(ast, input_stream):
+        '''
+            executes the AST with the transmitted input stream
+        '''
         command = ast[0]
 
         if command == 'pipe':
