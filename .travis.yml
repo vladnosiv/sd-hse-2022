@@ -1,0 +1,13 @@
+language: python
+python:
+  - 3.8
+ before_install:
+  - pip install -U pip
+  - pip install -U pytest
+os:
+  - linux
+  - windows
+  - osx
+script:
+  - ast_walker/test/run_tests.sh
+  - test_main/run_tests.sh
