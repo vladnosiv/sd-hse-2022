@@ -32,8 +32,8 @@ class Main():
 					self.__cli.write('Grammar error')
 					continue
 			except LexError as e:
-				self.__cli.write(e.args)
-				self.__cli.write(e.s)
+				self.__cli.write(e.args[0])
+				self.__cli.write(e.text)
 				self.__cli.write('^')
 				continue
 
