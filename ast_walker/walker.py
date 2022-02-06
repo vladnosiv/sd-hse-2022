@@ -1,0 +1,34 @@
+from io import BytesIO
+from ast_walker.executor import FunctionExecutor
+
+
+class ASTWalker:
+    @staticmethod
+    def execute(ast, input_stream):
+        command = ast[0]
+
+        if command == 'pipe':
+            left, rigth = ast[1:]
+
+            returncode_left, out_left, err_left = execute(left, BytesIO())
+
+            if returncode != 0:
+                return returncode_left, out_left, err_left
+
+            returncode_right, out_right, err_right = execute(right, out_left)
+
+            returncode = returncode_right
+            out = out_right
+            err = err_left
+            err.write(err_right.getvalue())
+
+            return returncode, out, err
+        elif command == 'func_with_args':
+            function_name = ast[1]
+            args = ast[2]
+            return FunctionExecutor.execute(function_name, input_stream, *args)
+        elif command == 'func':
+             function_name = ast[1]
+            return FunctionExecutor.execute(function_name, input_stream)
+        else:
+            raise KeyError(f'unknown command {command}')
