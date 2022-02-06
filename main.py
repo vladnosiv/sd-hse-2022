@@ -3,7 +3,7 @@ from io import BytesIO
 from ply.lex import LexError
 from cli import CLI
 from substitute import Substitute
-from parser import CommandParser
+from command_parser import CommandParser
 from ast_walker import ASTWalker
 
 
