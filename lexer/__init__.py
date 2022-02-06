@@ -1,1 +1,1 @@
-from lexer.Lexer import Lexer
+from lexer.lexer import Lexer
