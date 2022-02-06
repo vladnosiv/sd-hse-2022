@@ -57,7 +57,7 @@ def wc(input_stream, *args):
         if cat_code != 0:
             return cat_code, out, cat_err
     else:
-        err.write('args must contatins one filename')
+        err.write(b'args must contatins one filename')
         return 1, out, err
 
     lines_count = len(content.split(b'\n'))
