@@ -6,6 +6,8 @@ name: Python application
 on:
   push:
     branches: [ hw-2 ]
+    paths:
+    - '**'
   pull_request:
     branches: [ hw-2 ]
 
