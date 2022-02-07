@@ -8,7 +8,6 @@ import ply.lex as lex
     the PLY library tools
 '''
 class Lexer:
-
     tokens = (
         'pipe',
         'assign',
