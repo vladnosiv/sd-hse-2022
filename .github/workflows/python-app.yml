@@ -23,5 +23,6 @@ jobs:
         pip install pytest
     - name: Test with pytest
       run: |
-        pytest ast_walker/test/run_tests.sh
-        pytest test_main/run_tests.sh
+        bash ast_walker/test/run_tests.sh
+        bash test_main/run_tests.sh
+        bash command_parser/test/run_tests.sh
