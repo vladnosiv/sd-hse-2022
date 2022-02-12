@@ -34,6 +34,9 @@ class Main():
 		while True:
 			command = self.__get_input()
 			derefed = self.__subs.deref(command)
+			if derefed is None:
+				self.__cli.write('Grammar error')
+				continue
 
 			try:
 				ast = self.__parser.parse(derefed)
