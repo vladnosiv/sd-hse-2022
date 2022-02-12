@@ -1,10 +1,9 @@
 import sys
-sys.path.append('../')
 from io import StringIO
 from main import Main
 
 
-main = Main()
+main = Main(is_testing=True)
 
 
 def test_echo_noargs_empty_output():
@@ -19,7 +18,7 @@ def test_echo_noargs_empty_output():
 		 pass # its ok
 	out.seek(0)
 
-	assert out.read() == ''
+	assert out.read() == '> > '
 	
 	sys.stdout = sys.__stdout__
 	sys.stdin = sys.__stdin__
@@ -37,7 +36,7 @@ def test_echo_five_args_correct_output():
 		 pass # its ok
 	out.seek(0)
 
-	assert out.read() == '1 2 3 4 5\n'
+	assert out.read() == '> 1 2 3 4 5\n> '
 		
 	sys.stdout = sys.__stdout__
 	sys.stdin = sys.__stdin__
@@ -55,7 +54,7 @@ def test_wrong_symbol_error_output():
 		 pass # its ok
 	out.seek(0)
 
-	assert out.read() == 'Scanning error. Illegal character \'@\'\n@\n^\n'
+	assert out.read() == '> Scanning error. Illegal character \'@\'\n@\n^\n> '
 		
 	sys.stdout = sys.__stdout__
 	sys.stdin = sys.__stdin__
@@ -73,7 +72,7 @@ def test_wrong_grammar_error_output():
 		 pass # its ok
 	out.seek(0)
 
-	assert out.read() == 'Grammar error\n'
+	assert out.read() == '> Grammar error\n> '
 		
 	sys.stdout = sys.__stdout__
 	sys.stdin = sys.__stdin__

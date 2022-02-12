@@ -9,7 +9,7 @@ class CLI():
 		:returns: a command as a string
 		"""
 
-		return input()
+		return input('> ')
 
 	def write(self, output: str):
 		"""
