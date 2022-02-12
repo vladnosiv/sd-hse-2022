@@ -2,7 +2,7 @@
 
 ## Запуск
 
-Зависимости: **python3**
+Зависимости: **python3**, **pytest**
 
 Запуск CLI: `python3 run.py`
 
