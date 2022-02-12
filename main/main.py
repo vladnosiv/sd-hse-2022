@@ -1,4 +1,5 @@
 import sys
+sys.path.append('../')
 from io import BytesIO
 from ply.lex import LexError
 from cli import CLI
