@@ -22,6 +22,13 @@ class Main():
 		Runs command line interpreter.
 		"""
 
+		try:
+			return self.__run_loop()
+		except KeyboardInterrupt:
+			self.__cli.write('\nKeyboard interrupt')
+
+
+	def __run_loop(self):
 		while True:
 			command = self.__cli.read()
 			derefed = self.__subs.deref(command)
@@ -46,6 +53,7 @@ class Main():
 
 			if code != 0:
 				return code
+
 
 if __name__ == '__main__':
 	Main().run()

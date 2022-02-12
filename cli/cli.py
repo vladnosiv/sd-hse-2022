@@ -9,7 +9,13 @@ class CLI():
 		:returns: a command as a string
 		"""
 
-		return input('> ')
+		try:
+			cmd = input('> ')
+		except EOFError:
+			print('')
+			exit()
+
+		return cmd
 
 	def write(self, output: str):
 		"""
