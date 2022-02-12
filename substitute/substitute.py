@@ -40,7 +40,7 @@ class Substitute():
 		"""
 
 		var = r'(\w+)'
-		val = r'("[^"]+"|\'[^\']+\'|[^\'"]+)'
+		val = r'("[^"]*"|\'[^\']*\'|[^\'"]+)'
 
 		result = re.match(rf'^\s*{var}={val}\s*$', command)
 
@@ -81,10 +81,28 @@ class Substitute():
 		for c in string:
 			if c == "'":
 				open_strong = not open_strong
-				new_string.append(c)
+				if len(curr_var) == 0:
+					new_string.append("'")
+				elif len(curr_var) == 1:
+					return None
+				else:
+					var = ''.join(curr_var[1:])
+					val = self.__env.get_value(var)
+					curr_var = []
+					new_string += val
+					new_string.append("'")
 			elif c == '"':
 				open_weak = not open_weak
-				new_string.append(c)
+				if len(curr_var) == 0:
+					new_string.append('"')
+				elif len(curr_var) == 1:
+					return None
+				else:
+					var = ''.join(curr_var[1:])
+					val = self.__env.get_value(var)
+					curr_var = []
+					new_string += val
+					new_string.append('"')
 			elif c == '$' and not open_strong:
 				if len(curr_var) == 0:
 					curr_var.append('$')
