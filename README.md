@@ -4,7 +4,9 @@
 
 Зависимости: **python3**
 
-Запуск: `python3 main.py`
+Запуск CLI: `python3 run.py`
+
+Запуск тестов: `bash run_tests.sh`
 
 ## Команда
 * Носивской Владислав
