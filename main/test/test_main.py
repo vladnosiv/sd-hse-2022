@@ -12,7 +12,10 @@ def test_echo_noargs_empty_output():
 	out = StringIO()
 	sys.stdout = out
 
-	main.run()
+	try:
+		main.run()
+	except EOFError:
+		 pass # its ok
 	out.seek(0)
 
 	assert out.read() == ''
@@ -27,7 +30,10 @@ def test_echo_five_args_correct_output():
 	out = StringIO()
 	sys.stdout = out
 
-	main.run()
+	try:
+		main.run()
+	except EOFError:
+		 pass # its ok
 	out.seek(0)
 
 	assert out.read() == '1 2 3 4 5\n'
@@ -42,7 +48,10 @@ def test_wrong_symbol_error_output():
 	out = StringIO()
 	sys.stdout = out
 
-	main.run()
+	try:
+		main.run()
+	except EOFError:
+		 pass # its ok
 	out.seek(0)
 
 	assert out.read() == 'Scanning error. Illegal character \'@\'\n@\n^\n'
@@ -57,7 +66,10 @@ def test_wrong_grammar_error_output():
 	out = StringIO()
 	sys.stdout = out
 
-	main.run()
+	try:
+		main.run()
+	except EOFError:
+		 pass # its ok
 	out.seek(0)
 
 	assert out.read() == 'Grammar error\n'
