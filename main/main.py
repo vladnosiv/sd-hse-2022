@@ -13,10 +13,11 @@ class Main():
 	The main module that executes user's commands.
 	"""
 
-	def __init__(self):
-		self.__cli    = CLI()
-		self.__subs   = Substitute()
-		self.__parser = CommandParser()
+	def __init__(self, is_testing=False):
+		self.__cli     = CLI()
+		self.__subs    = Substitute()
+		self.__parser  = CommandParser()
+		self.__testing = is_testing
 
 	def run(self):
 		"""
@@ -31,7 +32,7 @@ class Main():
 
 	def __run_loop(self):
 		while True:
-			command = self.__cli.read()
+			command = self.__get_input()
 			derefed = self.__subs.deref(command)
 
 			try:
@@ -54,6 +55,18 @@ class Main():
 
 			if code != 0:
 				return code
+
+	def __get_input(self):
+		if self.__testing:
+			# if in testing mode, then EOF should be handled by tests
+			return self.__cli.read()
+		else:
+			try:
+				command = self.__cli.read()
+			except EOFError:
+				self.__cli.write('\nEOF')
+				exit()
+			return command
 
 
 if __name__ == '__main__':
