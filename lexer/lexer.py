@@ -1,9 +1,13 @@
 import re
 import ply.lex as lex
 
-
+'''
+    Class with lexer rules
+    Is designed to be used inside
+    the parses with the help of
+    the PLY library tools
+'''
 class Lexer:
-
     tokens = (
         'pipe',
         'assign',
@@ -11,7 +15,6 @@ class Lexer:
         'word'
     )
 
-    # для каждого токена из массива мы должны написать его определение вида t_ИМЯТОКЕНА = регулярка
     t_pipe = r'\|'
     t_assign = r'='
     t_exit_token = r'exit'

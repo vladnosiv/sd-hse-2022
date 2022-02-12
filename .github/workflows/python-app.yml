@@ -1,0 +1,28 @@
+name: Python application
+
+on:
+  push:
+    branches: [ hw-2 ]
+  pull_request:
+    branches: [ hw-2 ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+    - name: Test with pytest
+      run: |
+        bash ast_walker/test/run_tests.sh
+        bash test_main/run_tests.sh
+        bash command_parser/test/run_tests.sh

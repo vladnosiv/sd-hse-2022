@@ -54,5 +54,13 @@ class CommandParser:
         self.lexer = Lexer()
         self.parser = yacc(module=self)
 
-    def parse(self, code):
-        return self.parser.parse(code)
+    '''
+        Parses the expression using a parser assembled
+        from the grammar written inside the rest of
+        the class methods
+    '''
+    def parse(self, s):
+        '''
+            s: str -- parsing string
+        '''
+        return self.parser.parse(s)
