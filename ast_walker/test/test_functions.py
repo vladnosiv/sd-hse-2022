@@ -1,13 +1,15 @@
 from io import BytesIO
+import tempfile
 from ..functions import cat, echo, wc, pwd, shell_exit
 
 
 def stream(string=''):
     return BytesIO(string.encode())
 
-"""
+
 def test_cat():
-    filename = 'test_functions.py'
+    fp = tempfile.NamedTemporaryFile(dir='/tmp')
+    filename = fp.name
     code, out, err = cat(stream(), filename)
 
     assert code == 0
@@ -23,7 +25,6 @@ def test_cat():
 
     code, out, err = cat(stream('unknown_file.hehe'))
     assert code != 0
-"""
 
 
 def test_echo():
@@ -42,9 +43,10 @@ def test_echo():
     assert err.getvalue() == b''
     assert out.getvalue().decode() == text
 
-"""
+
 def test_wc():
-    filename = 'test_functions.py'
+    fp = tempfile.NamedTemporaryFile(dir='/tmp')
+    filename = fp.name
 
     code, out, err = wc(stream(), filename)
 
@@ -62,7 +64,6 @@ def test_wc():
     code, out, err = wc(stream(), filename, filename)
 
     assert code != 0
-"""
 
 
 def test_pwd():
