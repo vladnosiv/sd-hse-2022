@@ -56,8 +56,6 @@ class Main():
 			self.__cli.write(err.read().decode("utf-8"))
 			self.__cli.write(out.read().decode("utf-8"))
 
-			if code != 0:
-				return code
 
 	def __get_input(self):
 		if self.__testing:
