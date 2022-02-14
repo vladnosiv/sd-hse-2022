@@ -63,4 +63,7 @@ class CommandParser:
         '''
             s: str -- parsing string
         '''
-        return self.parser.parse(s)
+        if s == '':
+            return ()
+        else:
+            return self.parser.parse(s)
