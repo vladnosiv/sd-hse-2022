@@ -11,6 +11,10 @@ class ASTWalker:
         '''
             executes the AST with the transmitted input stream
         '''
+
+        if len(ast) == 0:
+            return 0, BytesIO(), BytesIO() # empty input
+
         command = ast[0]
 
         if command == 'pipe':
