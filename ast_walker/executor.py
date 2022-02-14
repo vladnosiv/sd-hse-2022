@@ -18,7 +18,10 @@ class FunctionExecutor:
 
         if function is None:
             try:
-                result = subprocess.run([name, input_stream.read()], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                arguments = list(args) +  [input_stream.getvalue().decode()]
+                arguments = ' '.join(arguments)
+
+                result = subprocess.run([name, arguments], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 return result.returncode, BytesIO(result.stdout), BytesIO(result.stderr)
             except:
                 return 1, BytesIO(), BytesIO(f'{name}: command not found'.encode())

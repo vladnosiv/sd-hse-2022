@@ -76,3 +76,24 @@ def test_wrong_grammar_error_output():
 		
 	sys.stdout = sys.__stdout__
 	sys.stdin = sys.__stdin__
+
+
+def test_pipes():
+	def test_pipe(command, expected):
+		cmd = StringIO(command)
+		sys.stdin = cmd
+		out = StringIO()
+		sys.stdout = out
+
+		try:
+			main.run()
+		except EOFError:
+			 pass # its ok
+
+		assert out.getvalue() == expected
+
+		sys.stdout = sys.__stdout__
+		sys.stdin = sys.__stdin__
+
+	test_pipe('echo "123" | echo', '> "123"\n> ')
+	test_pipe('printf "123" | echo', '> "123"\n> ')
