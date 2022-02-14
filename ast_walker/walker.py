@@ -15,6 +15,7 @@ class ASTWalker:
         if len(ast) == 0:
             return 0, BytesIO(), BytesIO() # empty input
 
+
         command = ast[0]
 
         if command == 'pipe':
