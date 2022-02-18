@@ -70,7 +70,7 @@ def wc(input_stream, *args):
 
 
 @FunctionHolder.shell_function('pwd')
-def pwd(input_stream):
+def pwd(input_stream, *args):
     returncode = 0
     out = BytesIO()
     err = BytesIO()
@@ -81,5 +81,5 @@ def pwd(input_stream):
 
 
 @FunctionHolder.shell_function('exit')
-def shell_exit(input_stream):
+def shell_exit(input_stream, *args):
     exit()
