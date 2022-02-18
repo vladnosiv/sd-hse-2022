@@ -40,9 +40,9 @@ class Substitute():
 		"""
 
 		var = r'(\w+)'
-		val = r'("[^"]*"|\'[^\']*\'|[^\'"]+)'
+		val = r'("[^"]*"|\'[^\']*\'|[^\s\'"]+)'
 
-		result = re.match(rf'^\s*{var}={val}\s*$', command)
+		result = re.match(rf'^\s*{var}\s*=\s*{val}\s*$', command)
 
 		if result is None or \
 		   result.group(1) is None or \
