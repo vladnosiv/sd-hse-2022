@@ -1,4 +1,5 @@
 from ast_walker.holder import FunctionHolder
+from ast_walker.grep import grep
 from io import BytesIO
 from os import getcwd
 
@@ -93,3 +94,16 @@ def pwd(input_stream, *args):
 @FunctionHolder.shell_function('exit')
 def shell_exit(input_stream, *args):
     exit()
+
+
+# функция-аналог bash-функции `grep`
+# ищет шаблон в файле/потоке
+@FunctionHolder.shell_function('grep')
+def shell_grep(input_stream, *args):
+    returncode = 0
+    out = BytesIO()
+    err = BytesIO()
+
+    grep(input_stream, args)
+
+    return returncode, out, err
