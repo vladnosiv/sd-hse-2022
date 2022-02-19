@@ -3,7 +3,7 @@ sys.path.append('../')
 from io import BytesIO
 from ply.lex import LexError
 from cli import CLI
-from substitute import Substitute
+from substitute import Substitute, SubstituteException
 from command_parser import CommandParser
 from ast_walker import ASTWalker
 
@@ -33,9 +33,13 @@ class Main():
 	def __run_loop(self):
 		while True:
 			command = self.__get_input()
-			derefed = self.__subs.deref(command)
-			if derefed is None:
-				self.__cli.write('Grammar error')
+
+			try:
+				derefed = self.__subs.deref(command)
+			except SubstituteException as e:
+				self.__cli.write(e.message)
+				self.__cli.write(command)
+				self.__cli.write(''.join([' ' for _ in range(e.pos)]) +'^')
 				continue
 
 			try:

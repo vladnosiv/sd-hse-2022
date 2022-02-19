@@ -1,1 +1,1 @@
-from substitute.substitute import Substitute
+from substitute.substitute import Substitute, SubstituteException
