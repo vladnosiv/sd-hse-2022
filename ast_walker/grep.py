@@ -75,7 +75,7 @@ def search_in_files(
 
 
 def grep(input_stream, args_str: List[str]):
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog='grep')
     parser.add_argument('needle', help='pattern for search', type=str)
     parser.add_argument('files', nargs='*')
     group = parser.add_mutually_exclusive_group()

@@ -1,7 +1,8 @@
 from ast_walker.holder import FunctionHolder
 from ast_walker.grep import grep
-from io import BytesIO
+from io import BytesIO, StringIO
 from os import getcwd
+import contextlib
 
 
 # функция-аналог bash-функции `cat` [FILE]
@@ -104,6 +105,16 @@ def shell_grep(input_stream, *args):
     out = BytesIO()
     err = BytesIO()
 
-    grep(input_stream, args)
+    out_str = StringIO()
+    err_str = StringIO()
+
+    with contextlib.redirect_stdout(out_str) and contextlib.redirect_stderr(err_str):
+        try:
+            grep(input_stream, args)
+        except:
+            returncode = 1
+
+    out.write(out_str.getvalue().encode())
+    err.write(err_str.getvalue().encode())
 
     return returncode, out, err
