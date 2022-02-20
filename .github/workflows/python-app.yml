@@ -2,9 +2,9 @@ name: Python application
 
 on:
   push:
-    branches: [ hw-2 ]
+    branches: [ hw-3-grep ]
   pull_request:
-    branches: [ hw-2 ]
+    branches: [ hw-3-grep ]
 
 jobs:
   build:
