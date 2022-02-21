@@ -17,13 +17,13 @@ def test_cat():
 
     text = out.getvalue().decode()
 
-    code, out, err = cat(stream(filename))
+    code, out, err = cat(BytesIO(), filename)
 
     assert code == 0
     assert err.getvalue() == b''
     assert text == out.getvalue().decode()
 
-    code, out, err = cat(stream('unknown_file.hehe'))
+    code, out, err = cat(BytesIO(), 'unknown_file.hehe')
     assert code != 0
 
 

@@ -42,5 +42,5 @@ def test_assign():
     assert check_tokens(lexer, [
         'word',
         'assign',
-        'word'
+        'string'
     ])
