@@ -5,8 +5,8 @@ from os import getcwd
 import contextlib
 
 
-# функция-аналог bash-функции `cat` [FILE]
-# выводит на экран содержимое файла
+# Usage: cat [FILE]
+# Prints file content, or input stream if file not specified.
 @FunctionHolder.shell_function('cat')
 def cat(input_stream, *args):
     returncode = 0
@@ -14,7 +14,8 @@ def cat(input_stream, *args):
     err = BytesIO()
 
     if len(args) == 0:
-        filename = input_stream.getvalue().decode()
+        out.write(input_stream.getvalue())
+        return returncode, out, err
     elif len(args) == 1:
         filename = args[0]
     else:
@@ -34,8 +35,8 @@ def cat(input_stream, *args):
     return returncode, out, err
 
 
-# функция-аналог bash-функции `echo`
-# выводит на экран свой аргумент (или аргументы)
+# Usage: echo [ARGS]...
+# Prints args.
 @FunctionHolder.shell_function('echo')
 def echo(input_stream, *args):
     returncode = 0
@@ -48,8 +49,8 @@ def echo(input_stream, *args):
     return returncode, out, err
 
 
-# функция-аналог bash-функции `wc` [FILE]
-# выводит количество строк, слов и байт в файле
+# Usage: wc [FILE]
+# Prints number of lines, words and bytes in file.
 @FunctionHolder.shell_function('wc')
 def wc(input_stream, *args):
     returncode = 0
@@ -77,8 +78,8 @@ def wc(input_stream, *args):
     return returncode, out, err
 
 
-# функция-аналог bash-функции `pwd`
-# печатает текущую директорию
+# Usage: pwd
+# Prints path to the current directory.
 @FunctionHolder.shell_function('pwd')
 def pwd(input_stream, *args):
     returncode = 0
@@ -90,8 +91,8 @@ def pwd(input_stream, *args):
     return returncode, out, err
 
 
-# функция-аналог bash-функции `exit`
-# совершает выход из интерпретатора
+# Usage: exit
+# Shut down CLI.
 @FunctionHolder.shell_function('exit')
 def shell_exit(input_stream, *args):
     exit()

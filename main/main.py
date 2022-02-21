@@ -3,7 +3,7 @@ sys.path.append('../')
 from io import BytesIO
 from ply.lex import LexError
 from cli import CLI
-from substitute import Substitute, SubstituteException
+from environment import Substitute, SubstituteException
 from command_parser import CommandParser
 from ast_walker import ASTWalker
 

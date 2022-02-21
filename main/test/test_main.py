@@ -95,5 +95,5 @@ def test_pipes():
 		sys.stdout = sys.__stdout__
 		sys.stdin = sys.__stdin__
 
-	test_pipe('echo "123" | echo', '> "123"\n> ')
-	test_pipe('printf "123" | echo', '> "123"\n> ')
+	test_pipe('echo "123" | echo', '> 123\n> ')
+	test_pipe('printf "123" | echo', '> 123\n> ')
