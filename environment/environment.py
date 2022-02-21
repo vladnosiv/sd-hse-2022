@@ -124,7 +124,7 @@ class Substitute():
 
 class SubstituteException(Exception):
 	"""
-	An exception raised for errors occurred while parsing substitutuions and assignments.
+	An exception raised for errors occurred while parsing substitutuions.
 
 	Attributes:
 		pos     -- a position in input where parsing for substutute failed
