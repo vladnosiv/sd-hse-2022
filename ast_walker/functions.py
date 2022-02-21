@@ -12,7 +12,8 @@ def cat(input_stream, *args):
     err = BytesIO()
 
     if len(args) == 0:
-        filename = input_stream.getvalue().decode()
+        out.write(input_stream.getvalue())
+        return returncode, out, err
     elif len(args) == 1:
         filename = args[0]
     else:
