@@ -1,5 +1,6 @@
 from io import BytesIO
 from ast_walker.executor import FunctionExecutor
+from environment import EnvironmentHandler
 
 
 class ASTWalker:
@@ -34,6 +35,12 @@ class ASTWalker:
             err.write(err_right.getvalue())
 
             return returncode, out, err
+        elif command == "assign":
+            var = ast[1]
+            val = ast[2]
+            EnvironmentHandler.set_value(var, val)
+
+            return 0, BytesIO(), BytesIO()
         elif command == 'func_with_args':
             function_name = ast[1]
             args = ast[2]
