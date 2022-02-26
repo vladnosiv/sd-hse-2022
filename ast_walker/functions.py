@@ -119,3 +119,12 @@ def shell_grep(input_stream, *args):
     err.write(err_str.getvalue().encode())
 
     return returncode, out, err
+
+@FunctionHolder.shell_function('cd')
+def shell_cd(input_stream, *args):
+    raise NotImplementedError
+
+
+@FunctionHolder.shell_function('ls')
+def shell_ls(input_stream, *args):
+    raise NotImplementedError
