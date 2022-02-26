@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import copy
 import re
 from typing import Optional
@@ -9,6 +10,7 @@ class EnvironmentHandler:
 	A module that contains system variables.
 	"""
 	__vars = copy.deepcopy(dict(os.environ))
+	__current_directory = Path.cwd().resolve()
 
 	@classmethod
 	def set_value(cls, name: str, value: str):
@@ -29,6 +31,31 @@ class EnvironmentHandler:
 		"""
 
 		return cls.__vars.get(name, '')
+
+	@classmethod
+	def resolve_path(cls, path: str) -> Path:
+		"""
+		Returns absolute path from `path`
+		:param path: a system path
+		:returns: an absolute path 
+		"""
+		p = Path(path)
+		return p if p.is_absolute() else __current_directory.joinpath(p)
+
+	@classmethod
+	def get_current_working_directory(cls) -> Path:
+		"""
+		:returns: current working directory
+		"""
+		return cls.__current_directory
+
+	@classmethod
+	def set_current_working_directory(cls, path: Path):
+		"""
+		Sets current working directory. Whether the given path exists or not
+		:param: new path
+		"""
+		cls.__current_directory = path
 
 
 class Substitute():
