@@ -1,6 +1,7 @@
 from ast_walker.holder import FunctionHolder
 from io import BytesIO
 import subprocess
+from environment import EnvironmentHandler
 
 
 class FunctionExecutor:
@@ -18,20 +19,16 @@ class FunctionExecutor:
 
         if function is None:
             try:
-                input_content = input_stream.getvalue().decode()
-                if input_content != '':
-                    arguments = list(args) + [input_content]
-                else:
-                    arguments = list(args)
-                arguments = ' '.join(arguments)
-
-                if arguments == '':
-                    result = subprocess.run(name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                else:
-                    result = subprocess.run([name, arguments], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                result = subprocess.run(
+                    [name] + list(args),
+                    input=input_stream.getvalue(),
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    env=EnvironmentHandler.as_dict()
+                )
 
                 return result.returncode, BytesIO(result.stdout), BytesIO(result.stderr)
-            except:
-                return 1, BytesIO(), BytesIO(f'{name}: command not found'.encode())
+            except Exception as e:
+                return 1, BytesIO(), BytesIO(f'{e}'.encode())
         else:
             return function(input_stream, *args)
