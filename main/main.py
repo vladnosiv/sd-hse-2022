@@ -13,10 +13,10 @@ class Main():
 	The main module that executes user's commands.
 	"""
 
-	def __init__(self, is_testing=False):
-		self.__cli     = CLI()
-		self.__subs    = Substitute()
-		self.__parser  = CommandParser()
+	def __init__(self, cli = CLI(), subs = Substitute(), parser = CommandParser(), is_testing=False):
+		self.__cli     = cli
+		self.__subs    = subs
+		self.__parser  = parser
 		self.__testing = is_testing
 
 	def run(self):
