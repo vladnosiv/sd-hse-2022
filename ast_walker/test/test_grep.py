@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import io
+from environment import EnvironmentHandler
 from ..grep import *
 
 
@@ -17,7 +18,7 @@ def test_check_entry():
 def test_read_files(tmp_path, monkeypatch):
     (tmp_path / 'a.txt').write_text('first line\nsecond line\nthird line')
     (tmp_path / 'b.txt').write_text('FIRST LINE\nSECOND LINE\nTHIRD LINE')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     lines = read_files(None, ['a.txt', 'b.txt'])
     assert lines == [('a.txt', ['first line', 'second line', 'third line']), (
         'b.txt', ['FIRST LINE', 'SECOND LINE', 'THIRD LINE'])]
@@ -29,7 +30,7 @@ def test_read_files(tmp_path, monkeypatch):
 
 def test_search_in_file(tmp_path, monkeypatch, capsys):
     (tmp_path / 'a.txt').write_text('needle\nnedle\nneedle needle needle\ntrash')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     check_entry = check_entry_generator('needle', False, False, False, False)
     data = read_files(None, ['a.txt'])
     lines = data[0][1]
@@ -57,7 +58,7 @@ def test_count_in_lines():
 def test_search_in_files(tmp_path, monkeypatch, capsys):
     (tmp_path / 'a.txt').write_text('first line\nsecond line\nthird line')
     (tmp_path / 'b.txt').write_text('LINE LINE LINE\nTRRRRASH')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     data = read_files(None, ['a.txt', 'b.txt'])
     check_entry = check_entry_generator('line', False, False, False, True)
     search_in_files(data, check_entry, True, '{0}:{1}', False)
@@ -101,7 +102,7 @@ def test_integrate_stdin_grep_count(monkeypatch, capsys):
 
 def test_integrate_file_grep(tmp_path, monkeypatch, capsys):
     (tmp_path / 'a.txt').write_text('the needl\npref needle suf')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     grep(None, ['needle', 'a.txt'])
     out, err = capsys.readouterr()
     assert err == ''
@@ -111,7 +112,7 @@ def test_integrate_file_grep(tmp_path, monkeypatch, capsys):
 def test_integrate_files_grep(tmp_path, monkeypatch, capsys):
     (tmp_path / 'a.txt').write_text('pref needle\nneedle suf\n')
     (tmp_path / 'b.txt').write_text('the needl\npref needle suf')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     grep(None, ['needle', 'b.txt', 'a.txt'])
     out, err = capsys.readouterr()
     assert err == ''
@@ -121,7 +122,7 @@ def test_integrate_files_grep(tmp_path, monkeypatch, capsys):
 def test_integrate_files_grep_count(tmp_path, monkeypatch, capsys):
     (tmp_path / 'a.txt').write_text('pref needle\nneedle suf\n')
     (tmp_path / 'b.txt').write_text('the needl\npref needle suf')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     grep(None, ['-c', 'needle', 'b.txt', 'a.txt'])
     out, err = capsys.readouterr()
     assert err == ''
@@ -131,7 +132,7 @@ def test_integrate_files_grep_count(tmp_path, monkeypatch, capsys):
 def test_integrate_format_files_grep(tmp_path, monkeypatch, capsys):
     (tmp_path / 'a.txt').write_text('needle\ntrash\ni want to pass ALGEBRA\n')
     (tmp_path / 'b.txt').write_text('ALGeBRAAA\nI hate algebra?\nI love algebra?\n')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     grep(None, ['-li', 'algebra', 'a.txt', 'b.txt'])
     out, err = capsys.readouterr()
     assert err == ''
@@ -145,7 +146,7 @@ def test_integrate_format_files_grep(tmp_path, monkeypatch, capsys):
 def test_integrate_all_keys_print_files_grep(tmp_path, monkeypatch, capsys):
     (tmp_path / 'a.txt').write_text('fO\nFO\nFoO\n')
     (tmp_path / 'b.txt').write_text('hello fo?o world\nxfooyfoz\nfooo\n')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     grep(None, ['-livx', '-E', 'fo?o', 'b.txt', 'a.txt'])
     out, err = capsys.readouterr()
     assert err == ''
@@ -155,7 +156,7 @@ def test_integrate_all_keys_print_files_grep(tmp_path, monkeypatch, capsys):
 def test_integrate_all_keys_print_not_files_grep(tmp_path, monkeypatch, capsys):
     (tmp_path / 'a.txt').write_text('fO\nFO\nFoO\n')
     (tmp_path / 'b.txt').write_text('hello fo?o world\nxfooyfoz\nfooo\n')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     grep(None, ['-Livx', '-E', 'fo?o', 'b.txt', 'a.txt'])
     out, err = capsys.readouterr()
     assert err == ''
@@ -165,7 +166,7 @@ def test_integrate_all_keys_print_not_files_grep(tmp_path, monkeypatch, capsys):
 def test_integrate_all_keys_count_files_grep(tmp_path, monkeypatch, capsys):
     (tmp_path / 'a.txt').write_text('fO\nFO\nFoO\n')
     (tmp_path / 'b.txt').write_text('hello fo?o world\nxfooyfoz\nfooo\n')
-    monkeypatch.chdir(tmp_path)
+    EnvironmentHandler.set_current_working_directory(tmp_path)
     grep(None, ['-civx', '-E', 'fo?o', 'b.txt', 'a.txt'])
     out, err = capsys.readouterr()
     assert err == ''

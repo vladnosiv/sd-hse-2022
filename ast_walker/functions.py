@@ -1,7 +1,7 @@
 from ast_walker.holder import FunctionHolder
 from ast_walker.grep import grep
 from io import BytesIO, StringIO
-from os import getcwd
+from environment import EnvironmentHandler
 import contextlib
 
 
@@ -17,7 +17,7 @@ def cat(input_stream, *args):
         out.write(input_stream.getvalue())
         return returncode, out, err
     elif len(args) == 1:
-        filename = args[0]
+        filename = EnvironmentHandler.resolve_path(args[0])
     else:
         err.write('args must contatins one filename')
         return 1, out, err
@@ -86,7 +86,7 @@ def pwd(input_stream, *args):
     out = BytesIO()
     err = BytesIO()
 
-    out.write(getcwd().encode())
+    out.write(str(EnvironmentHandler.get_current_working_directory()).encode())
 
     return returncode, out, err
 

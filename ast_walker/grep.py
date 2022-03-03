@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from typing import List, Tuple, TextIO, Callable
+from environment import EnvironmentHandler
 import sys
 import re
 import argparse
@@ -13,7 +14,7 @@ def read_files(input_stream: TextIO, name_files: List[str]) -> List[Tuple[str, L
     data = []
     if len(name_files) > 0:
         for current_file in name_files:
-            with open(current_file, 'r') as f:
+            with open(EnvironmentHandler.resolve_path_as_str(current_file), 'r') as f:
                 data.append((current_file, get_lines_of_file(f)))
     else:
         data.append(('sys.stdin', get_lines_of_file(input_stream)))
