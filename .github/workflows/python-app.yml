@@ -4,7 +4,7 @@ on:
   push:
     branches: [ hw-3-grep ]
   pull_request:
-    branches: [ hw-3-grep ]
+    branches: [ hw-3-grep, master ]
 
 jobs:
   build:
