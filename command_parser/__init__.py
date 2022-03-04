@@ -1,1 +1,1 @@
-from command_parser.parser import CommandParser
+from command_parser.parser import CommandParser, ParserException

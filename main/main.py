@@ -4,7 +4,7 @@ from io import BytesIO
 from ply.lex import LexError
 from cli import CLI
 from environment import Substitute, SubstituteException
-from command_parser import CommandParser
+from command_parser import CommandParser, ParserException
 from ast_walker import ASTWalker
 
 
@@ -38,8 +38,6 @@ class Main():
 				derefed = self.__subs.deref(command)
 			except SubstituteException as e:
 				self.__cli.write(e.message + '\n')
-				self.__cli.write(command + '\n')
-				self.__cli.write(''.join([' ' for _ in range(e.pos)]) +'^' + '\n')
 				continue
 
 			try:
@@ -49,8 +47,9 @@ class Main():
 					continue
 			except LexError as e:
 				self.__cli.write(e.args[0] + '\n')
-				self.__cli.write(e.text + '\n')
-				self.__cli.write('^' + '\n')
+				continue
+			except ParserException as e:
+				self.__cli.write(e.message + '\n')
 				continue
 
 			code, out, err = ASTWalker.execute(ast)

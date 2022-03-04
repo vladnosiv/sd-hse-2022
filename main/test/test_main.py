@@ -34,15 +34,15 @@ def test_echo_five_args_correct_output():
 
 
 def test_wrong_symbol_error_output():
-	main_test('@', '> Scanning error. Illegal character \'@\'\n@\n^\n> ')
+	main_test('@', '> Scanning error. Illegal character \'@\'\n> ')
 
 
 def test_wrong_grammar_error_output():
-	main_test('| kek |', '> Grammar error\n> ')
+	main_test('| kek |', '> Pipe\'s left command can\'t be empty\n> ')
 
 
 def test_simple():
-	main_test('echo "$"', '> Variable name can\'t start with quotes\necho "$"\n       ^\n> ')
+	main_test('echo "$"', '> Variable name can\'t start with quotes\n> ')
 	main_test('echo 123', '> 123\n> ')
 	main_test('echo "12"3', '> 123\n> ')
 	main_test('echo \'$x\'', '> $x\n> ')
@@ -91,15 +91,15 @@ def test_env():
 	main_test('x=5\nbash -c "echo $x"1\'2\'3', '> > 5123\n> ')
 	main_test('x=5\nbash -c "echo $x"1"2"3', '> > 5123\n> ')
 	main_test('x=5\nbash -c \'echo $x\'', '> > 5\n> ')
-	main_test('x=5\nbash -c \"echo \'$x\'\"', '> > $x\n> ')
-	main_test('x=5\nbash -c \"echo \'"$x"\'\"', '> > "$x"\n> ')
-	main_test('x=ec\ny=ho\nbash -c \"$x$y \'"$x"\'\"', '> > "$x"\n> ')
-	main_test('x=ec\ny=ho\n$x$y 123', '> > 123\n> ')
-	main_test('x=ch\ne$xo 123', '> > 123\n> ')
-	main_test('x=228\ny=$x\nx=322\necho $x$y', '> > 322228\n> ')
-	main_test('x=echo\ny=" 1   2    3"\n$x$y', '> > 1 2 3\n> ')
-	main_test('x=ec\ny="ho 1   2    3"\n$x$y', '> > 1 2 3\n> ')
-	main_test('x======5\nbash -c \"echo $x\"', '> > =====5\n> ')
+	main_test('x=5\nbash -c \"echo \'$x\'\"', '> > 5\n> ')
+	main_test('x=5\nbash -c \"echo \'"$x"\'\"', '> > 5\n> ')
+	main_test('x=ec\ny=ho\nbash -c \"$x$y \'"$x"\'\"', '> > > ec\n> ')
+	main_test('x=ec\ny=ho\n$x$y 123', '> > > 123\n> ')
+	main_test('x=ch\ne$x"o" 123', '> > 123\n> ')
+	main_test('x=228\ny=$x\nx=322\necho $x$y', '> > > > 322228\n> ')
+	main_test('x=echo\ny=" 1   2    3"\n$x$y', '> > > 1 2 3\n> ')
+	main_test('x=ec\ny="ho 1   2    3"\n$x$y', '> > > 1 2 3\n> ')
+	main_test('x======5\n', '> Wrong assignment usage\n> ')
 
 
 def test_spaces_in_names():
@@ -112,8 +112,8 @@ def test_spaces_in_names():
 		def get_path(spaced_name_case):
 			return os.path.join(d, spaced_name_case)
 
-		main_test('cat {filename}'.format(filename=get_path('\"a bc d\"')), content)
-		main_test('cat {filename}'.format(filename=get_path('\"a b\"\"c d\"')), content)
+		main_test('cat {filename}'.format(filename=get_path('\"a bc d\"')), f'> {content}> ')
+		main_test('cat {filename}'.format(filename=get_path('\"a b\"\"c d\"')), f'> {content}> ')
 
 
 def test_valid_stdout_and_stderr():
