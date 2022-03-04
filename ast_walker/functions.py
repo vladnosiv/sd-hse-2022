@@ -2,6 +2,7 @@ from ast_walker.holder import FunctionHolder
 from io import BytesIO, StringIO
 from os import getcwd
 import contextlib
+from pathlib import Path
 
 
 # Usage: cat [FILE]
@@ -18,13 +19,22 @@ def cat(input_stream, *args):
 
     for filename in args:
         try:
+            p = Path(filename)
+
+            if not p.exists():
+                err.write(f'file {filename} does not found\n'.encode())
+                returncode = 1
+                continue
+
+            if not p.is_file():
+                err.write(f'{filename} is not file\n'.encode())
+                returncode = 1
+                continue
+
             with open(filename, 'r') as file:
                 out.write(file.read().encode())
-        except FileNotFoundError:
-            err.write(f'file {filename} does not found'.encode())
-            returncode = 1
-        except Exception:
-            err.write('something went wrong'.encode())
+        except Exception as e:
+            err.write(f'{e}\n'.encode())
             returncode = 1
 
     return returncode, out, err

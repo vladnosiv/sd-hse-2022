@@ -2,6 +2,8 @@ import sys
 from io import StringIO
 from main import Main
 from functools import wraps
+from tempfile import TemporaryDirectory
+import os
 
 
 def main_test(command, expected_out=None):
@@ -39,12 +41,31 @@ def test_wrong_grammar_error_output():
 	main_test('| kek |', '> Grammar error\n> ')
 
 
+def test_simple():
+	main_test('echo "$"', '> Variable name can\'t start with quotes\necho "$"\n       ^\n> ')
+	main_test('echo 123', '> 123\n> ')
+	main_test('echo "12"3', '> 123\n> ')
+	main_test('echo \'$x\'', '> $x\n> ')
+	main_test('echo \'$env\'var', '> $envvar\n> ')
+	main_test('echo \'$env\'v\'a\'r', '> $envvar\n> ')
+	main_test('echo \'$e\'n\'v\'v\'a\'r', '> $envvar\n> ')
+	main_test('echo 1 2 3', '> 1 2 3\n> ')
+	main_test('\'echo\' 1 2 3', '> 1 2 3\n> ')
+	main_test('\'e\'c"ho" 1 2 3', '> 1 2 3\n> ')
+	main_test('echo 1    2    3', '> 1 2 3\n> ')
+	main_test('wc', '> \t0\t0\t0\t\n> ')
+	main_test('wc', '> \t0\t0\t0\t\n> ')
+
+
+
 def test_pipes():
 	main_test('echo "123" | echo', '> \n> ')
 	main_test('/usr/bin/echo "123" | echo', '> \n> ')
 	main_test('printf "123" | echo', '> \n> ')
 
 	main_test('echo "123" | cat', '> 123\n> ')
+	main_test('echo "123" 456 | cat', '> 123 456\n> ')
+
 	main_test('/usr/bin/echo "123" | cat', '> 123\n> ')
 	main_test('printf "123" | cat', '> 123> ')
 	main_test('echo 123 | wc', '> \t1\t1\t4\t\n> ')
@@ -62,3 +83,46 @@ def test_no_crashes():
 def test_check_values():
 	main_test('echo echo echo echo', '> echo echo echo\n> ')
 	main_test('"e"c\'h\'o 123', '> 123\n> ')
+
+
+def test_env():
+	main_test('x=5\nbash -c "echo $x"', '> > 5\n> ')
+	main_test('x=5\nbash -c "echo $x"123', '> > 5123\n> ')
+	main_test('x=5\nbash -c "echo $x"1\'2\'3', '> > 5123\n> ')
+	main_test('x=5\nbash -c "echo $x"1"2"3', '> > 5123\n> ')
+	main_test('x=5\nbash -c \'echo $x\'', '> > 5\n> ')
+	main_test('x=5\nbash -c \"echo \'$x\'\"', '> > $x\n> ')
+	main_test('x=5\nbash -c \"echo \'"$x"\'\"', '> > "$x"\n> ')
+	main_test('x=ec\ny=ho\nbash -c \"$x$y \'"$x"\'\"', '> > "$x"\n> ')
+	main_test('x=ec\ny=ho\n$x$y 123', '> > 123\n> ')
+	main_test('x=ch\ne$xo 123', '> > 123\n> ')
+	main_test('x=228\ny=$x\nx=322\necho $x$y', '> > 322228\n> ')
+	main_test('x=echo\ny=" 1   2    3"\n$x$y', '> > 1 2 3\n> ')
+	main_test('x=ec\ny="ho 1   2    3"\n$x$y', '> > 1 2 3\n> ')
+	main_test('x======5\nbash -c \"echo $x\"', '> > =====5\n> ')
+
+
+def test_spaces_in_names():
+	with TemporaryDirectory(dir='/tmp', prefix='python_shell_test') as d:
+		spaced_name = 'a bc d'
+		content = 'strange\nfile\ncontent'
+		with open(os.path.join(d, spaced_name), 'w') as f:
+			f.write(content)
+
+		def get_path(spaced_name_case):
+			return os.path.join(d, spaced_name_case)
+
+		main_test('cat {filename}'.format(filename=get_path('\"a bc d\"')), content)
+		main_test('cat {filename}'.format(filename=get_path('\"a b\"\"c d\"')), content)
+
+
+def test_valid_stdout_and_stderr():
+	with TemporaryDirectory(dir='/tmp', prefix='python_shell_test') as d:
+		filepath = os.path.join(d, 'run.py')
+		with open(filepath, 'w') as f:
+			f.write('import sys; print("my stdout"); print("my stderr", file=sys.stderr)')
+
+		main_test(f'python3 {filepath} | echo 123', '> my stderr\n123\n> ')
+		main_test(f'python3 {filepath} | cat', '> my stderr\nmy stdout\n> ')
+
+		# main_test(f'python3 {filepath}', '> my stdout\nmy stderr\n> ')
