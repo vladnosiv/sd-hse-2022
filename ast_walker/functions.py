@@ -21,10 +21,10 @@ def cat(input_stream, *args):
             with open(filename, 'r') as file:
                 out.write(file.read().encode())
         except FileNotFoundError:
-            err.write(f'file {filename} does not found'.encode())
+            err.write(f'file {filename} does not found\n'.encode())
             returncode = 1
         except Exception:
-            err.write('something went wrong'.encode())
+            err.write('something went wrong\n'.encode())
             returncode = 1
 
     return returncode, out, err

@@ -55,8 +55,7 @@ class Main():
 
 			code, out, err = ASTWalker.execute(ast)
 
-			if len(err.getvalue()) > 0:
-				self.__cli.write(err.getvalue().decode("utf-8") + '\n')
+			self.__cli.write(err.getvalue().decode("utf-8"))
 
 			self.__cli.write(out.getvalue().decode("utf-8"))
 
