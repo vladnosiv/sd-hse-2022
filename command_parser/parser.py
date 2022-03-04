@@ -52,6 +52,8 @@ class CommandParser:
         assignment : word assign word
         '''
 
+        p[1] = self.__remove_quotes(p[1])
+        p[3] = self.__remove_quotes(p[3])
         p[0] = ('assign', p[1], p[3])
 
     def p_atom(self, p):
@@ -60,6 +62,7 @@ class CommandParser:
              | word
         '''
 
+        p[1] = self.__remove_quotes(p[1])
         if len(p) == 3:
             p[0] = ('func_with_args', p[1], p[2])
         else:
@@ -71,6 +74,7 @@ class CommandParser:
              | word
         '''
 
+        p[1] = self.__remove_quotes(p[1])
         if len(p) == 2:
             p[0] = [p[1]]
         else:
@@ -111,9 +115,9 @@ class CommandParser:
                 new_string.append(c)
 
         if open_strong:
-            raise SubstituteException(open_strong_pos, "Strong quoting without closing symbol")
+            raise ParserException("Strong quoting without closing symbol")
         elif open_weak:
-            raise SubstituteException(open_weak_pos, "Weak quoting without closing symbol")
+            raise ParserException("Weak quoting without closing symbol")
         else:
             return ''.join(new_string)
 
