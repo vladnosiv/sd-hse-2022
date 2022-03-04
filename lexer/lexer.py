@@ -13,14 +13,14 @@ class Lexer:
         'assign',
         'exit_token',
         'word',
-        'string'
     )
+
+    literals = ['=']
 
     t_pipe = r'\|'
     t_assign = r'='
     t_exit_token = r'exit'
-    t_word = r'[:\\/%._a-zA-Z0-9$\-]+'
-    t_string = r'"[^"]*"|\'[^\']*\''
+    t_word = r'[:\\/%._a-zA-Z0-9$\-\'"]+'
 
     t_ignore = ' \r\n\t\f'
 
