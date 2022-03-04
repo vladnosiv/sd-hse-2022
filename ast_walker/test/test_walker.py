@@ -12,5 +12,5 @@ def test_walk():
 
     assert code == 0
     assert err.getvalue() == b''
-    assert out.getvalue() == b'"123" "456"'
+    assert out.getvalue() == b'"123" "456"\n'
 

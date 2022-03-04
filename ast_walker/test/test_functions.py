@@ -8,7 +8,7 @@ def stream(string=''):
 
 
 def get_temp_file(content=None):
-    fp = tempfile.NamedTemporaryFile(dir='/tmp', delete=False)
+    fp = tempfile.NamedTemporaryFile(dir='/tmp', delete=False, prefix)
     filename = fp.name
 
     if content is not None:
@@ -87,7 +87,7 @@ def test_cat_only_input_stream():
 
 def test_echo():
     values = ['1', '2', '3', 'hehe', '1337', '14', '42']
-    text = ' '.join(values)
+    text = ' '.join(values) + '\n'
 
     function_test(
         lambda: echo(stream(), *values),
@@ -99,14 +99,14 @@ def test_echo():
     function_test(
         lambda: echo(stream('        '.join(values))),
         expected_code='zero',
-        expected_out='',
+        expected_out='\n',
         expected_err=''
     )
 
     function_test(
         lambda: echo(stream('ignore it'), text),
         expected_code='zero',
-        expected_out=text,
+        expected_out=text + '\n',
         expected_err=''
     )
 
@@ -134,6 +134,7 @@ def test_wc():
     filename = get_temp_file('test\n\n\n\n123\t\t\t0123')
     code, out, err = wc(cat(stream(), filename)[1])
     text = out.getvalue().decode()
+    text = text[:len(text) - 1] # remove last '\n'
 
     print(cat(stream(), filename)[1].getvalue())
 
@@ -141,6 +142,15 @@ def test_wc():
         lambda: wc(stream(), filename),
         expected_code='zero',
         expected_out=text + f'{filename}\n',
+        expected_err=''
+    )
+
+
+def test_wc_newline():
+    function_test(
+        lambda: wc(stream('123\n')),
+        expected_code='zero',
+        expected_out='\t1\t1\t4\t\n',
         expected_err=''
     )
 
