@@ -1,6 +1,7 @@
 from ast_walker.holder import FunctionHolder
-from io import BytesIO
+from io import BytesIO, StringIO
 from os import getcwd
+import contextlib
 
 
 # Usage: cat [FILE]
@@ -14,21 +15,17 @@ def cat(input_stream, *args):
     if len(args) == 0:
         out.write(input_stream.getvalue())
         return returncode, out, err
-    elif len(args) == 1:
-        filename = args[0]
-    else:
-        err.write('args must contatins one filename')
-        return 1, out, err
 
-    try:
-        with open(filename, 'r') as file:
-            out.write(file.read().encode())
-    except FileNotFoundError:
-        err.write(f'file {filename} does not found'.encode())
-        returncode = 1
-    except Exception:
-        err.write('something went wrong'.encode())
-        returncode = 1
+    for filename in args:
+        try:
+            with open(filename, 'r') as file:
+                out.write(file.read().encode())
+        except FileNotFoundError:
+            err.write(f'file {filename} does not found'.encode())
+            returncode = 1
+        except Exception:
+            err.write('something went wrong'.encode())
+            returncode = 1
 
     return returncode, out, err
 
@@ -42,7 +39,6 @@ def echo(input_stream, *args):
     err = BytesIO()
 
     out.write(b' '.join(map(str.encode, args)))
-    out.write(b' '.join(input_stream.getvalue().split()))
 
     return returncode, out, err
 
@@ -55,23 +51,27 @@ def wc(input_stream, *args):
     out = BytesIO()
     err = BytesIO()
 
+    def get_values(content):
+        lines_count = content.count(b'\n')
+        words_count = len(content.split())
+        bytes_count = len(content)
+        return f'\t{lines_count}\t{words_count}\t{bytes_count}\t'
+
+
     if len(args) == 0:
         content = input_stream.getvalue()
-    elif len(args) == 1:
-        cat_code, cat_out, cat_err = cat(BytesIO(args[0].encode()))
+        out.write(get_values(content).encode())
+        return returncode, out, err
+
+    for filename in args:
+        cat_code, cat_out, cat_err = cat(BytesIO(), filename)
         content = cat_out.getvalue()
 
         if cat_code != 0:
-            return cat_code, out, cat_err
-    else:
-        err.write(b'args must contatins one filename')
-        return 1, out, err
+            returncode = cat_code
+            err.write(cat_err.getvalue())
 
-    lines_count = len(content.split(b'\n'))
-    words_count = len(content.split())
-    bytes_count = len(content)
-
-    out.write(f'\t{lines_count}\t{words_count}\t{bytes_count}\t'.encode())
+        out.write(f'{get_values(content)}{filename}\n'.encode())
 
     return returncode, out, err
 

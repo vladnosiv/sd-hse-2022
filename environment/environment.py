@@ -30,6 +30,11 @@ class EnvironmentHandler:
 
 		return cls.__vars.get(name, '')
 
+	@classmethod
+	def as_dict(cls):
+		return cls.__vars
+
+
 
 class Substitute():
 	"""
