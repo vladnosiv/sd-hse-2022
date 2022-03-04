@@ -8,7 +8,7 @@ def stream(string=''):
 
 
 def get_temp_file(content=None):
-    fp = tempfile.NamedTemporaryFile(dir='/tmp', delete=False, prefix)
+    fp = tempfile.NamedTemporaryFile(dir='/tmp', delete=False)
     filename = fp.name
 
     if content is not None:
