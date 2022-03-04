@@ -29,6 +29,6 @@ class FunctionExecutor:
 
                 return result.returncode, BytesIO(result.stdout), BytesIO(result.stderr)
             except Exception as e:
-                return 1, BytesIO(), BytesIO(f'{e}'.encode())
+                return 1, BytesIO(), BytesIO(f'{e}\n'.encode())
         else:
             return function(input_stream, *args)
