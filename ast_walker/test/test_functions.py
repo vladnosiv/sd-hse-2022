@@ -62,6 +62,13 @@ def test_cat_one_file():
         expected_err='file unknown_file.hehe does not found\n'
     )
 
+    function_test(
+        lambda: cat(stream(), '/tmp'),
+        expected_code='non zero',
+        expected_out='',
+        expected_err='/tmp is not file\n'
+    )
+
 
 def test_cat_two_files():
     filename_1 = get_temp_file('file_1')
