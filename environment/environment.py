@@ -117,16 +117,16 @@ class Substitute():
 					new_string.append(c)
 
 		if len(curr_var) == 1:
-			raise SubstituteException(len(string) - 1, "Variable name can't be empty")
+			raise SubstituteException("Variable name can't be empty")
 		elif len(curr_var) > 1:
 			var = ''.join(curr_var[1:])
 			val = EnvironmentHandler.get_value(var)
 			new_string += val
 
 		if open_strong:
-			raise SubstituteException(open_strong_pos, "Strong quoting without closing symbol")
+			raise SubstituteException("Strong quoting without closing symbol")
 		elif open_weak:
-			raise SubstituteException(open_weak_pos, "Weak quoting without closing symbol")
+			raise SubstituteException("Weak quoting without closing symbol")
 		else:
 			return ''.join(new_string)
 
@@ -144,6 +144,5 @@ class SubstituteException(Exception):
 		:param message: a message explaining parsing failure
 		"""
 
-		self.pos = pos
 		self.message = message
 		super().__init__(self.message)
