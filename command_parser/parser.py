@@ -16,12 +16,36 @@ class CommandParser:
                 | assignment
                 | atom
                 | exit_token
+                | pipe_error
+                | assign_error
         '''
 
         if len(p) == 4 and p[2] == '|':
             p[0] = ('pipe', p[1], p[3])
         else:
             p[0] = p[1]
+
+    def p_pipe_error(self, p):
+        '''
+        pipe_error : command pipe
+                   | pipe command
+        '''
+
+        if p[1] == '|':
+            raise ParserException("Pipe's left command can't be empty")
+        else:
+            raise ParserException("Pipe's right command can't be empty")
+
+    def p_assign_error(self, p):
+        '''
+        assign_error : word assign
+                   | assign word
+        '''
+
+        if p[1] == '=':
+            raise ParserException("Variables can't have an empty name")
+        else:
+            raise ParserException("Can't assign empty value")
 
     def p_assignment(self, p):
         '''
@@ -53,7 +77,12 @@ class CommandParser:
             p[0] = [p[1]] + p[2]
 
     def p_error(self, p):
-        raise ParserException(f"Wrong '{p.value}' usage")
+        if p.value == '|':
+            raise ParserException("Wrong pipe usage")
+        elif p.value == '=':
+            raise ParserException("Wrong assignment usage")
+        else:
+            raise ParserException(f"Wrong '{p.value}' usage")
 
     def __remove_quotes(self, string: str) -> str:
         """
