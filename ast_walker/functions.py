@@ -38,7 +38,7 @@ def echo(input_stream, *args):
     out = BytesIO()
     err = BytesIO()
 
-    out.write(b' '.join(map(str.encode, args)))
+    out.write(b' '.join(map(str.encode, args)) + b'\n')
 
     return returncode, out, err
 
@@ -60,7 +60,7 @@ def wc(input_stream, *args):
 
     if len(args) == 0:
         content = input_stream.getvalue()
-        out.write(get_values(content).encode())
+        out.write(get_values(content).encode() + b'\n')
         return returncode, out, err
 
     for filename in args:

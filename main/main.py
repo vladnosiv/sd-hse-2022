@@ -27,7 +27,7 @@ class Main():
 		try:
 			return self.__run_loop()
 		except KeyboardInterrupt:
-			self.__cli.write('\nKeyboard interrupt')
+			self.__cli.write('\nKeyboard interrupt\n')
 
 
 	def __run_loop(self):
@@ -37,28 +37,28 @@ class Main():
 			try:
 				derefed = self.__subs.deref(command)
 			except SubstituteException as e:
-				self.__cli.write(e.message)
-				self.__cli.write(command)
-				self.__cli.write(''.join([' ' for _ in range(e.pos)]) +'^')
+				self.__cli.write(e.message + '\n')
+				self.__cli.write(command + '\n')
+				self.__cli.write(''.join([' ' for _ in range(e.pos)]) +'^' + '\n')
 				continue
 
 			try:
 				ast = self.__parser.parse(derefed)
 				if ast is None:
-					self.__cli.write('Grammar error')
+					self.__cli.write('Grammar error\n')
 					continue
 			except LexError as e:
-				self.__cli.write(e.args[0])
-				self.__cli.write(e.text)
-				self.__cli.write('^')
+				self.__cli.write(e.args[0] + '\n')
+				self.__cli.write(e.text + '\n')
+				self.__cli.write('^' + '\n')
 				continue
 
 			code, out, err = ASTWalker.execute(ast)
 
-			out.seek(0)
-			err.seek(0)
-			self.__cli.write(err.read().decode("utf-8"))
-			self.__cli.write(out.read().decode("utf-8"))
+			if len(err.getvalue()) > 0:
+				self.__cli.write(err.getvalue().decode("utf-8") + '\n')
+
+			self.__cli.write(out.getvalue().decode("utf-8"))
 
 
 	def __get_input(self):
@@ -69,7 +69,7 @@ class Main():
 			try:
 				command = self.__cli.read()
 			except EOFError:
-				self.__cli.write('\nEOF')
+				self.__cli.write('\nEOF\n')
 				exit()
 			return command
 

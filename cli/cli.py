@@ -18,4 +18,4 @@ class CLI():
 		"""
 
 		if len(output) > 0:
-			print(output)
+			print(output, end='')
