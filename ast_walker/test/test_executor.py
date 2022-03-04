@@ -11,4 +11,4 @@ def test_execution():
 
     assert code == 0
     assert err.getvalue() == b''
-    assert out.getvalue() == b'228 322'
+    assert out.getvalue() == b'228 322\n'

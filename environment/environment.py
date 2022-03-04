@@ -30,6 +30,11 @@ class EnvironmentHandler:
 
 		return cls.__vars.get(name, '')
 
+	@classmethod
+	def as_dict(cls):
+		return cls.__vars
+
+
 
 class Substitute():
 	"""
@@ -62,7 +67,7 @@ class Substitute():
 				if len(curr_var) == 0:
 					new_string.append("'")
 				elif len(curr_var) == 1:
-					raise SubstituteException(pos, "Variable name can't start with quotes")
+					raise SubstituteException("Variable name can't start with quotes")
 				else:
 					var = ''.join(curr_var[1:])
 					val = EnvironmentHandler.get_value(var)
@@ -77,7 +82,7 @@ class Substitute():
 				if len(curr_var) == 0:
 					new_string.append('"')
 				elif len(curr_var) == 1:
-					raise SubstituteException(pos, "Variable name can't start with quotes")
+					raise SubstituteException("Variable name can't start with quotes")
 				else:
 					var = ''.join(curr_var[1:])
 					val = EnvironmentHandler.get_value(var)
@@ -88,55 +93,56 @@ class Substitute():
 				if len(curr_var) == 0:
 					curr_var.append('$')
 				elif len(curr_var) == 1:
-					raise SubstituteException(pos, "Variable name can't start with '$'")
+					raise SubstituteException("Variable name can't start with '$'")
 				else:
 					var = ''.join(curr_var[1:])
 					val = EnvironmentHandler.get_value(var)
 					curr_var = ['$']
 					new_string += val
-			elif c not in [' ', '\t'] and len(curr_var) > 0:
-				curr_var.append(c)
-			elif c in [' ', '\t'] and len(curr_var) == 1:
-				raise SubstituteException(pos, "Variable name can't be empty")
-			elif c in [' ', '\t'] and len(curr_var) > 1:
-				var = ''.join(curr_var[1:])
-				val = EnvironmentHandler.get_value(var)
-				curr_var = []
-				new_string += val
-				new_string.append(c)
+			elif re.match(r'[:\\/._a-zA-Z0-9\-]+', c) is None:
+				if len(curr_var) == 0:
+					new_string.append(c)
+				elif len(curr_var) == 1:
+					raise SubstituteException(f"Variable name can't start with '{c}'")
+				else:
+					var = ''.join(curr_var[1:])
+					val = EnvironmentHandler.get_value(var)
+					curr_var = []
+					new_string += val
+					new_string.append(c)
 			else:
-				new_string.append(c)
+				if len(curr_var) > 0:
+					curr_var.append(c)
+				else:
+					new_string.append(c)
 
 		if len(curr_var) == 1:
-			raise SubstituteException(len(string) - 1, "Variable name can't be empty")
+			raise SubstituteException("Variable name can't be empty")
 		elif len(curr_var) > 1:
 			var = ''.join(curr_var[1:])
 			val = EnvironmentHandler.get_value(var)
 			new_string += val
 
 		if open_strong:
-			raise SubstituteException(open_strong_pos, "Strong quoting without closing symbol")
+			raise SubstituteException("Strong quoting without closing symbol")
 		elif open_weak:
-			raise SubstituteException(open_weak_pos, "Weak quoting without closing symbol")
+			raise SubstituteException("Weak quoting without closing symbol")
 		else:
 			return ''.join(new_string)
 
 
 class SubstituteException(Exception):
 	"""
-	An exception raised for errors occurred while parsing substitutuions and assignments.
+	An exception raised for errors occurred while parsing substitutuions.
 
 	Attributes:
-		pos     -- a position in input where parsing for substutute failed
 		message -- a message explaining parsing failure
 	"""
 
-	def __init__(self, pos: int, message: str):
+	def __init__(self, message: str):
 		"""
-		:param pos: a position in input where parsing for substutute failed
 		:param message: a message explaining parsing failure
 		"""
 
-		self.pos = pos
 		self.message = message
 		super().__init__(self.message)

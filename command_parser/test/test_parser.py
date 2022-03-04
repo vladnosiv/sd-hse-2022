@@ -1,4 +1,4 @@
-from ..parser import CommandParser
+from ..parser import CommandParser, ParserException
 
 
 def test_simple():
@@ -20,7 +20,10 @@ def test_simple():
 def test_bad_pipe():
     s = 'pwd | wc |'
     parser = CommandParser()
-    ast = parser.parse(s)
+    try:
+        ast = parser.parse(s)
+    except ParserException:
+        ast = None
 
     assert ast is None
 
