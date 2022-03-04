@@ -59,7 +59,14 @@ def test_cat_one_file():
         lambda: cat(stream(), 'unknown_file.hehe'),
         expected_code='non zero',
         expected_out='',
-        expected_err='file unknown_file.hehe does not found'
+        expected_err='file unknown_file.hehe does not found\n'
+    )
+
+    function_test(
+        lambda: cat(stream(), '/tmp'),
+        expected_code='non zero',
+        expected_out='',
+        expected_err='/tmp is not file\n'
     )
 
 
