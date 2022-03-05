@@ -21,7 +21,7 @@ class Lexer:
     t_pipe = r'\|'
     t_assign = r'='
     t_exit_token = r'exit'
-    t_word = r'([:\\/%._\w$\-]+|\'[:\\/%._\w$\-\s"]*\'|"[:\\/%._\w$\-\s\']*")+'
+    t_word = r'([:\\/%._\w$\-]+|\'[^"]*\'|"[^\']*")+'
 
     t_ignore = ' \r\n\t\f'
 

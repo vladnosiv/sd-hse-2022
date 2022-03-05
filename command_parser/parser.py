@@ -53,7 +53,6 @@ class CommandParser:
         '''
 
         p[1] = self.__remove_quotes(p[1])
-        p[3] = self.__remove_quotes(p[3])
         p[0] = ('assign', p[1], p[3])
 
     def p_atom(self, p):
