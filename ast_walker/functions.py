@@ -68,7 +68,6 @@ def wc(input_stream, *args):
         bytes_count = len(content)
         return f'\t{lines_count}\t{words_count}\t{bytes_count}\t'
 
-
     if len(args) == 0:
         content = input_stream.getvalue()
         out.write(get_values(content).encode() + b'\n')

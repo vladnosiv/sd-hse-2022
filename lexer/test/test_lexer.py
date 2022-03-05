@@ -1,4 +1,4 @@
-from ply.lex import LexError
+from ply.ply.lex import LexError
 from lexer import Lexer
 import pytest
 

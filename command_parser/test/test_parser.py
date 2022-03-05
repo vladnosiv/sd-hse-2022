@@ -38,5 +38,3 @@ def test_assignment():
         'afe2',
         'DWQQW123.txt'
     )
-
-

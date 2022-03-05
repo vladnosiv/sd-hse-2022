@@ -141,7 +141,7 @@ def test_wc():
     filename = get_temp_file('test\n\n\n\n123\t\t\t0123')
     code, out, err = wc(cat(stream(), filename)[1])
     text = out.getvalue().decode()
-    text = text[:len(text) - 1] # remove last '\n'
+    text = text[:len(text) - 1]  # remove last '\n'
 
     print(cat(stream(), filename)[1].getvalue())
 
