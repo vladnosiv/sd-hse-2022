@@ -121,7 +121,7 @@ def shell_grep(input_stream, *args):
     with contextlib.redirect_stdout(out_str) and contextlib.redirect_stderr(err_str):
         try:
             grep(input_stream, args)
-        except:
+        except Exception:
             returncode = 1
 
     out.write(out_str.getvalue().encode())
