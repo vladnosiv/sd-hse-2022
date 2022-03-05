@@ -1,3 +1,7 @@
+# PLY debug outputs
+command_parser/parser.out
+command_parser/parsetab.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
