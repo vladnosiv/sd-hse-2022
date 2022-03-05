@@ -41,10 +41,10 @@ def incorrect_arg_prepare(path):
 ])
 def test_incorrect_arg(tmp_path, config):
     prepare, start, args = config
-    prepare(config)
+    prepare(tmp_path)
     EnvironmentHandler.set_current_working_directory(tmp_path.joinpath(*start))
 
-    code, out, err = shell_ls(BytesIO(), [str(Path.joinpath(*args))])
+    code, out, err = shell_ls(BytesIO(), str(Path(*args)))
 
     assert code != 0
     assert len(err.getvalue()) > 0
@@ -52,8 +52,8 @@ def test_incorrect_arg(tmp_path, config):
 
 
 def correct_arg_prepare(path):
-    path.joinpath('01', '02')
-    path.joinpath('11')
+    path.joinpath('01', '02').mkdir(parents=True)
+    path.joinpath('11').mkdir()
     (path / 'file').write_text('')
 
 

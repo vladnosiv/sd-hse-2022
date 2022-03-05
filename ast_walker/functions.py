@@ -1,3 +1,5 @@
+import os
+
 from ast_walker.holder import FunctionHolder
 from ast_walker.grep import grep
 from io import BytesIO, StringIO
@@ -120,6 +122,7 @@ def shell_grep(input_stream, *args):
 
     return returncode, out, err
 
+
 @FunctionHolder.shell_function('cd')
 def shell_cd(input_stream, *args):
     raise NotImplementedError
@@ -127,4 +130,23 @@ def shell_cd(input_stream, *args):
 
 @FunctionHolder.shell_function('ls')
 def shell_ls(input_stream, *args):
-    raise NotImplementedError
+    returncode = 0
+    out = BytesIO()
+    err = BytesIO()
+    if len(args) == 0:
+        content = os.listdir(EnvironmentHandler.get_current_working_directory())
+    elif len(args) == 1:
+        if args[0][0] == '/':
+            path = args[0]
+        else:
+            path = str(EnvironmentHandler.get_current_working_directory().joinpath(args[0]))
+        try:
+            content = os.listdir(path)
+        except FileNotFoundError:
+            err.write(b'Directory not found')
+            return 1, out, err
+    else:
+        err.write(b'args must contain one filename')
+        return 1, out, err
+    out.write(str.encode('\n'.join(content)))
+    return returncode, out, err

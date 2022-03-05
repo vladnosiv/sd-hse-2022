@@ -18,7 +18,7 @@ class MockCLI:
 
 
     def write(self, to_write):
-        self.output.write(to_write.encode())
+        self.output.write(to_write)
 
 
 def user_input(commands):
