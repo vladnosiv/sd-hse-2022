@@ -1,5 +1,5 @@
 import re
-import ply.lex as lex
+import ply.ply.lex as lex
 
 '''
     Class with lexer rules
