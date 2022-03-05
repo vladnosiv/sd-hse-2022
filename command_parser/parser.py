@@ -123,7 +123,7 @@ class CommandParser:
 
     def __init__(self):
         self.lexer = Lexer()
-        self.parser = yacc(module=self)
+        self.parser = yacc(module=self, debug=False)
 
     '''
         Parses the expression using a parser assembled
