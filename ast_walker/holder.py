@@ -5,7 +5,7 @@ class FunctionHolder:
     __functions = dict()
 
     @classmethod
-    def shell_function(cls, name): #decorator
+    def shell_function(cls, name):  # decorator
         '''
             a decorator that allows you to turn a custom function into a function for the CLI
         '''

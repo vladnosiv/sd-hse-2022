@@ -1,13 +1,14 @@
 import re
 import ply.ply.lex as lex
 
-'''
-    Class with lexer rules
-    Is designed to be used inside
-    the parses with the help of
-    the PLY library tools
-'''
+
 class Lexer:
+    '''
+        Class with lexer rules
+        Is designed to be used inside
+        the parses with the help of
+        the PLY library tools
+    '''
     tokens = (
         'pipe',
         'assign',
