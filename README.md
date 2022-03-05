@@ -2,6 +2,12 @@
 
 ## Запуск
 
+Подготовка: 
+```
+git submodule init
+git submodule update
+```
+
 Зависимости: **python3**, **pytest**
 
 Запуск CLI: `python3 run.py`
