@@ -11,19 +11,33 @@ class Lexer:
     '''
     tokens = (
         'pipe',
-        'assign',
-        'exit_token',
-        'word',
+        'assignment',
+        'word'
     )
 
-    literals = ['=']
+    def t_pipe(self, t):
+        r'\|'
+        return t
 
-    t_pipe = r'\|'
-    t_assign = r'='
-    t_exit_token = r'exit'
-    t_word = r'([:\\/%._\w$\-]+|\'[^\']*\'|"[^"]*")+'
+    def t_assignment(self, t):
+        r'^\s*[_a-zA-Z\-]+[\w\-]*=([^\s\'"]+|\'[^\']*\'|"[^"]*")+\s*$'
 
-    t_ignore = ' \r\n\t\f'
+        var = re.search(r'[_\w\-]+[_\w\-0-9]*', t.value)[0]
+        a_val = re.search(r'=\s*([^\s\'"]+|\'[^\']*\'|"[^"]*")+', t.value)[0]
+        prefix = re.search(r'=\s*', a_val)[0]
+        val = a_val[len(prefix):]
+
+        t.value = (var, val)
+
+        return t
+
+    def t_word(self, t):
+        r'([^\s\'"]+|\'[^\']*\'|"[^"]*")+'
+        return t
+
+    def t_empty(self, t):
+        r'\s+'
+        pass
 
     def t_error(self, t):
         pass

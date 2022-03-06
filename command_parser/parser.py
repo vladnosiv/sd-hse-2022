@@ -13,9 +13,8 @@ class CommandParser:
     def p_command(self, p):
         '''
         command : command pipe command
-                | assignment
+                | assign
                 | atom
-                | exit_token
                 | pipe_error
                 | assign_error
         '''
@@ -39,7 +38,7 @@ class CommandParser:
     def p_assign_error(self, p):
         '''
         assign_error : word assign
-                   | assign word
+                     | assign word
         '''
 
         if p[1] == '=':
@@ -47,14 +46,14 @@ class CommandParser:
         else:
             raise ParserException("Can't assign empty value")
 
-    def p_assignment(self, p):
+    def p_assign(self, p):
         '''
-        assignment : word assign word
+        assign : assignment
         '''
 
-        p[1] = self.__remove_quotes(p[1])
-        p[3] = self.__remove_quotes(p[3])
-        p[0] = ('assign', p[1], p[3])
+        var = self.__remove_quotes(p[1][0])
+        val = self.__remove_quotes(p[1][1])
+        p[0] = ('assign', var, val)
 
     def p_atom(self, p):
         '''
@@ -89,28 +88,22 @@ class CommandParser:
             raise ParserException(f"Wrong '{p.value}' usage")
 
     def __remove_quotes(self, string: str) -> str:
-        '''
-            Removes pairing quotes in a string if they exists.
-            :param string: an input string
-            :returns: a string without pairing quotes
-            :raises ParserException: if the input has incorrect quoting
-        '''
+        """
+        Removes pairing quotes in a string if they exists.
+        :param string: an input string
+        :returns: a string without pairing quotes
+        :raises ParserException: if the input has incorrect quoting
+        """
 
         new_string = []
         open_strong = False
-        open_strong_pos = None
         open_weak = False
-        open_weak_pos = None
 
-        for pos, c in enumerate(string):
+        for c in string:
             if c == "'" and not open_weak:
                 open_strong = not open_strong
-                if open_strong:
-                    open_strong_pos = pos
             elif c == '"' and not open_strong:
                 open_weak = not open_weak
-                if open_weak:
-                    open_weak_pos = pos
             else:
                 new_string.append(c)
 
@@ -123,7 +116,7 @@ class CommandParser:
 
     def __init__(self):
         self.lexer = Lexer()
-        self.parser = yacc(module=self, debug=False)
+        self.parser = yacc(module=self)
 
     '''
         Parses the expression using a parser assembled
@@ -142,17 +135,17 @@ class CommandParser:
 
 
 class ParserException(Exception):
-    '''
-        An exception raised for errors occurred while parsing command.
+    """
+    An exception raised for errors occurred while parsing command.
 
-        Attributes:
-            message -- a message explaining parsing failure
-    '''
+    Attributes:
+        message -- a message explaining parsing failure
+    """
 
     def __init__(self, message: str):
-        '''
-            :param message: a message explaining parsing failure
-        '''
+        """
+        :param message: a message explaining parsing failure
+        """
 
         self.message = message
         super().__init__(self.message)

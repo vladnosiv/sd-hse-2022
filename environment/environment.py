@@ -52,16 +52,12 @@ class Substitute():
         string = command
         new_string = []
         open_strong = False
-        open_strong_pos = None
         open_weak = False
-        open_weak_pos = None
         curr_var = []
 
-        for pos, c in enumerate(string):
+        for c in string:
             if c == "'" and not open_weak:
                 open_strong = not open_strong
-                if open_strong:
-                    open_strong_pos = pos
 
                 if len(curr_var) == 0:
                     new_string.append("'")
@@ -75,8 +71,6 @@ class Substitute():
                     new_string.append("'")
             elif c == '"' and not open_strong:
                 open_weak = not open_weak
-                if open_weak:
-                    open_weak_pos = pos
 
                 if len(curr_var) == 0:
                     new_string.append('"')
@@ -98,7 +92,7 @@ class Substitute():
                     val = EnvironmentHandler.get_value(var)
                     curr_var = ['$']
                     new_string += val
-            elif re.match(r'[:\\/._a-zA-Z0-9\-]+', c) is None:
+            elif re.match(r'[_\w\-0-9]', c) is None:
                 if len(curr_var) == 0:
                     new_string.append(c)
                 elif len(curr_var) == 1:
@@ -109,6 +103,8 @@ class Substitute():
                     curr_var = []
                     new_string += val
                     new_string.append(c)
+            elif re.match(r'[0-9]', c) is not None and len(curr_var) == 1:
+                raise SubstituteException(f"Variable name can't start with digit")
             else:
                 if len(curr_var) > 0:
                     curr_var.append(c)
