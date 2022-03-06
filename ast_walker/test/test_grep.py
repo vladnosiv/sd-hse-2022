@@ -6,7 +6,7 @@ def stream(string=''):
     return BytesIO(string.encode())
 
 
-def grep_case(*args, expected_code='zero', expected_out=None, expected_err=None):
+def grep_case(args, expected_code='zero', expected_out=None, expected_err=None):
     code, out, err = grep(*args)
 
     if expected_code == 'zero':
@@ -24,7 +24,8 @@ def grep_case(*args, expected_code='zero', expected_out=None, expected_err=None)
 def test_pattern(tmp_path):
     content = '123\n1\n2\n3\n'
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), '1', str((tmp_path / 'test.txt').absolute()),
+    grep_case(
+        args=[stream(), '1', str((tmp_path / 'test.txt').absolute())],
         expected_out='123\n1\n',
         expected_err=''
     )
@@ -33,7 +34,8 @@ def test_pattern(tmp_path):
 def test_newlines(tmp_path):
     content = '123\n1\n2\n3'
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), '3', str((tmp_path / 'test.txt').absolute()),
+    grep_case(
+        args=[stream(), '3', str((tmp_path / 'test.txt').absolute())],
         expected_out='123\n3\n',
         expected_err=''
     )
@@ -42,7 +44,8 @@ def test_newlines(tmp_path):
 def test_regex(tmp_path):
     content = '123\n1\n2\n3'
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), '1.*3', str((tmp_path / 'test.txt').absolute()),
+    grep_case(
+        args=[stream(), '1.*3', str((tmp_path / 'test.txt').absolute())],
         expected_out='123\n',
         expected_err=''
     )
@@ -51,7 +54,8 @@ def test_regex(tmp_path):
 def test_whole_word_basic(tmp_path):
     content = '123\n1\n2\n3\n'
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), '1', str((tmp_path / 'test.txt').absolute()), '-w',
+    grep_case(
+        args=[stream(), '1', str((tmp_path / 'test.txt').absolute()), '-w'],
         expected_out='1\n',
         expected_err=''
     )
@@ -60,7 +64,8 @@ def test_whole_word_basic(tmp_path):
 def test_whole_word(tmp_path):
     content = 'needle_needle\nneedle\nneedle-needle\nneedle+needle\nneedle needle\nneedleXneedle'
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), 'needle', str((tmp_path / 'test.txt').absolute()), '-w',
+    grep_case(
+        args=[stream(), 'needle', str((tmp_path / 'test.txt').absolute()), '-w'],
         expected_out='needle\nneedle-needle\nneedle+needle\nneedle needle\n',
         expected_err=''
     )
@@ -69,7 +74,8 @@ def test_whole_word(tmp_path):
 def test_case_ignore(tmp_path):
     content = 'word\nWoRd\n_WORD\nwtf\n'
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), 'word', str((tmp_path / 'test.txt').absolute()), '-i',
+    grep_case(
+        args=[stream(), 'word', str((tmp_path / 'test.txt').absolute()), '-i'],
         expected_out='word\nWoRd\n_WORD\n',
         expected_err=''
     )
@@ -78,7 +84,8 @@ def test_case_ignore(tmp_path):
 def test_case_ignore_whole_word(tmp_path):
     content = 'word\nWoRd\n_WORD\nwtf\n'
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), 'word', str((tmp_path / 'test.txt').absolute()), '-w', '-i',
+    grep_case(
+        args=[stream(), 'word', str((tmp_path / 'test.txt').absolute()), '-w', '-i'],
         expected_out='word\nWoRd\n',
         expected_err=''
     )
@@ -87,7 +94,8 @@ def test_case_ignore_whole_word(tmp_path):
 def test_after_context(tmp_path):
     content = 'needle\nwtf\nneedle\ngarbage\nneedle\ndont ignore\nignore\n'
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), 'needle', str((tmp_path / 'test.txt').absolute()), '-A', '1',
+    grep_case(
+        args=[stream(), 'needle', str((tmp_path / 'test.txt').absolute()), '-A', '1'],
         expected_out='needle\nwtf\nneedle\ngarbage\nneedle\ndont ignore\n',
         expected_err=''
     )
@@ -96,25 +104,29 @@ def test_after_context(tmp_path):
 def test_input_stream():
     content = 'needle\nwtf\nneedle\ngarbage\nneedle\ndont ignore\nignore\n'
 
-    grep_case(stream(content), 'needle', '-A', '1',
+    grep_case(
+        args=[stream(content), 'needle', '-A', '1'],
         expected_out='needle\nwtf\nneedle\ngarbage\nneedle\ndont ignore\n',
         expected_err=''
     )
 
 
 def test_only_needle():
-    grep_case(stream(), 'needle',
+    grep_case(
+        args=[stream(), 'needle'],
         expected_code='zero',
         expected_err=''
     )
 
 
 def test_invalid_arguments():
-    grep_case(stream(), 'needle', '/random_path/test.txt', '-A', '-1',
+    grep_case(
+        args=[stream(), 'needle', '/random_path/test.txt', '-A', '-1'],
         expected_code='non zero'
     )
 
-    grep_case(stream(),
+    grep_case(
+        args=[stream()],
         expected_code='non zero'
     )
 
@@ -157,7 +169,8 @@ def test_hard_regex(tmp_path):
     content = strip_all_lines(content)
 
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), regex, str((tmp_path / 'test.txt').absolute()), '-w',
+    grep_case(
+        args=[stream(), regex, str((tmp_path / 'test.txt').absolute()), '-w'],
         expected_out=content,
         expected_err=''
     )
@@ -176,7 +189,8 @@ def test_hard_regex_unmatch(tmp_path):
     content = strip_all_lines(content)
 
     (tmp_path / 'test.txt').write_text(content)
-    grep_case(stream(), regex, str((tmp_path / 'test.txt').absolute()), '-w',
+    grep_case(
+        args=[stream(), regex, str((tmp_path / 'test.txt').absolute()), '-w'],
         expected_out='',
         expected_err=''
     )
