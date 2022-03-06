@@ -113,7 +113,7 @@ def shell_grep(input_stream, *args):
 
     with contextlib.redirect_stdout(out_str) and contextlib.redirect_stderr(err_str):
         try:
-            grep(input_stream, args)
+            grep(input_stream, list(args))  # I beg you
         except:
             returncode = 1
 
@@ -125,7 +125,25 @@ def shell_grep(input_stream, *args):
 
 @FunctionHolder.shell_function('cd')
 def shell_cd(input_stream, *args):
-    raise NotImplementedError
+    returncode = 0
+    out = BytesIO()
+    err = BytesIO()
+
+    if len(args) == 0:
+        args = ['.']
+
+    if len(args) == 1:
+        path = EnvironmentHandler.resolve_path(args[0])
+        if not os.path.isdir(path):
+            msg = b'Not a directory' if os.path.exists(path) else b'No such directory found'
+            err.write(msg)
+            return 1, out, err
+        EnvironmentHandler.set_current_working_directory(path)
+    else:
+        err.write(b'args must contain one filename')
+        return 1, out, err
+
+    return returncode, out, err
 
 
 @FunctionHolder.shell_function('ls')
@@ -136,10 +154,7 @@ def shell_ls(input_stream, *args):
     if len(args) == 0:
         content = os.listdir(EnvironmentHandler.get_current_working_directory())
     elif len(args) == 1:
-        if args[0][0] == '/':
-            path = args[0]
-        else:
-            path = str(EnvironmentHandler.get_current_working_directory().joinpath(args[0]))
+        path = EnvironmentHandler.resolve_path(args[0])
         try:
             content = os.listdir(path)
         except FileNotFoundError:

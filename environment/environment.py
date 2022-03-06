@@ -40,12 +40,11 @@ class EnvironmentHandler:
 		:returns: an absolute path 
 		"""
 		p = Path(path)
-		return p if p.is_absolute() else cls.__current_directory.joinpath(p)
+		return p if p.is_absolute() else Path(os.path.abspath(cls.__current_directory.joinpath(p)))
 
 	@classmethod
 	def resolve_path_as_str(cls, path: str) -> str:
 		return str(cls.resolve_path(path))
-
 
 	@classmethod
 	def get_current_working_directory(cls) -> Path:
