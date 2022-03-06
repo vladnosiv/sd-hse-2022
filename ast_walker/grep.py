@@ -5,7 +5,7 @@ from ast_walker.functions import cat
 import contextlib
 
 
-def get_parser():
+def get_parser():  # function construct argument parser
     parser = argparse.ArgumentParser(prog='grep')
     parser.add_argument('pattern', help='pattern for search', type=str)
     parser.add_argument('files', nargs='*', metavar='file')
@@ -44,7 +44,7 @@ def grep(input_stream, *args):
         err.write(str(e).encode())
         return returncode, out, err
 
-    if arguments.after_context < 0:
+    if arguments.after_context < 0:  # after_context can't be negative
         returncode = 1
         err.write(b'after_context must be non-negative integer value\n')
         err.write(parser.format_usage().encode())
@@ -57,7 +57,7 @@ def grep(input_stream, *args):
     flags = re.IGNORECASE if arguments.case_ignore else 0
     after_context = arguments.after_context
 
-    def process_stream(stream):
+    def process_stream(stream):  # inner function for filter needed lines from stream
         context = 0
         out = BytesIO()
         stream.seek(0)
