@@ -33,10 +33,6 @@ def test_echo_five_args_correct_output():
     main_test('echo 1 2 3 4 5', '> 1 2 3 4 5\n> ')
 
 
-def test_wrong_symbol_error_output():
-    main_test('@', '> Scanning error. Illegal character \'@\'\n> ')
-
-
 def test_wrong_grammar_error_output():
     main_test('| kek |', '> Pipe\'s left command can\'t be empty\n> ')
 
@@ -98,7 +94,7 @@ def test_env():
     main_test('x=228\ny=$x\nx=322\necho $x$y', '> > > > 322228\n> ')
     main_test('x=echo\ny=" 1   2    3"\n$x$y', '> > > 1 2 3\n> ')
     main_test('x=ec\ny="ho 1   2    3"\n$x$y', '> > > 1 2 3\n> ')
-    main_test('x======5\n', '> Wrong assignment usage\n> ')
+    main_test('x======5\necho $x', '> > =====5\n> ')
 
 
 def test_spaces_in_names():

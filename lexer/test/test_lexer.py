@@ -25,22 +25,11 @@ def test_simple():
     ])
 
 
-def test_bad_symbol():
-    data = 'pwd@'
-    lexer = Lexer()
-    lexer.lexer.input(data)
-
-    with pytest.raises(LexError):
-        check_tokens(lexer, [])
-
-
 def test_assign():
     data = "A='input.txt'"
     lexer = Lexer()
     lexer.lexer.input(data)
 
     assert check_tokens(lexer, [
-        'word',
-        'assign',
-        'word'
+        'assignment'
     ])
