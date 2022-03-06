@@ -131,3 +131,10 @@ def test_valid_stdout_and_stderr():
         main_test(f'python3 {filepath} | cat', '> my stderr\nmy stdout\n> ')
 
         # main_test(f'python3 {filepath}', '> my stdout\nmy stderr\n> ')
+
+
+def test_grep():
+    main_test('/usr/bin/echo -e "123\\n1\\n2\\n3\\n" | grep 1', '> 123\n1\n> ')
+    main_test('/usr/bin/echo -e "123\\n1\\n2\\n3\\n" | grep 1 -A 0', '> 123\n1\n> ')
+    main_test('/usr/bin/echo -e "123\\n1\\n2\\n3\\n" | grep 1 -A 1', '> 123\n1\n2\n> ')
+    main_test('/usr/bin/echo -e "123\\n1\\n2\\n3\\n" | grep "1" -A 1 -w', '> 1\n2\n> ')

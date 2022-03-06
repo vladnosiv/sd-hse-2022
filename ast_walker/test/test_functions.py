@@ -143,8 +143,6 @@ def test_wc():
     text = out.getvalue().decode()
     text = text[:len(text) - 1]  # remove last '\n'
 
-    print(cat(stream(), filename)[1].getvalue())
-
     function_test(
         lambda: wc(stream(), filename),
         expected_code='zero',
