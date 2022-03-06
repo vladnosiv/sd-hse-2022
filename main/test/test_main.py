@@ -52,7 +52,7 @@ def test_quotes():
     main_test('x=5\nbash -c \'echo $x\'', '> > 5\n> ')
     main_test('x=5\nbash -c \"echo \'$x\'\"', '> > 5\n> ')
     main_test('x=5\nbash -c \"echo \'"$x"\'\"', '> > 5\n> ')
-    
+
     main_test('cat ./"  file"', '> file ./  file does not found\n> ')
 
 

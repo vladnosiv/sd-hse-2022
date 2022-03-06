@@ -92,7 +92,7 @@ class CommandParser:
         Removes pairing quotes in a string if they exists.
         :param string: an input string
         :returns: a string without pairing quotes
-        :raises ParserException: if the input has incorrect quoting 
+        :raises ParserException: if the input has incorrect quoting
         """
 
         new_string = []
