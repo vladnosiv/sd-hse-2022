@@ -99,7 +99,7 @@ def pwd(input_stream, *args):
     out = BytesIO()
     err = BytesIO()
 
-    out.write(getcwd().encode())
+    out.write(f'{getcwd()}\n'.encode())
 
     return returncode, out, err
 
