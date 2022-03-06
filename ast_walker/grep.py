@@ -1,10 +1,11 @@
 import re
 import argparse
-from io import BytesIO
+from io import BytesIO, StringIO
 from ast_walker.functions import cat
+import contextlib
 
 
-def grep(input_stream, *args):
+def get_parser():
     parser = argparse.ArgumentParser(prog='grep')
     parser.add_argument('pattern', help='pattern for search', type=str)
     parser.add_argument('files', nargs='*', metavar='file')
@@ -19,11 +20,24 @@ def grep(input_stream, *args):
         metavar='NUM'
     )
 
+    return parser
+
+
+def grep(input_stream, *args):
+    parser = get_parser()
+
     returncode, out, err = 0, BytesIO(), BytesIO()
+
+    out_str = StringIO()
+    err_str = StringIO()
+
     try:
-        arguments = parser.parse_args(args)
+        with contextlib.redirect_stdout(out_str) and contextlib.redirect_stderr(err_str):
+            arguments = parser.parse_args(args)
     except SystemExit:  # it raises when arguments are invalid
         returncode = 1
+        out.write(out_str.getvalue().encode())
+        err.write(err_str.getvalue().encode())
         return returncode, out, err
     except Exception as e:
         returncode = 1
@@ -49,6 +63,7 @@ def grep(input_stream, *args):
         stream.seek(0)
         for line in stream.readlines():
             s = re.search(pattern, line.decode(), flags=flags)
+            line = line.rstrip(b'\n') + b'\n'
             if s:
                 out.write(line)
                 context = after_context
