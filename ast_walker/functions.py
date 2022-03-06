@@ -19,6 +19,11 @@ def cat(input_stream, *args):
         return returncode, out, err
 
     for filename in args:
+        if not filename:
+            returncode = 1
+            err.write(f'Filename can\'t be empty\n'.encode())
+            continue
+
         try:
             p = Path(filename)
 
@@ -80,6 +85,7 @@ def wc(input_stream, *args):
         if cat_code != 0:
             returncode = cat_code
             err.write(cat_err.getvalue())
+            continue
 
         out.write(f'{get_values(content)}{filename}\n'.encode())
 
@@ -94,7 +100,7 @@ def pwd(input_stream, *args):
     out = BytesIO()
     err = BytesIO()
 
-    out.write(getcwd().encode())
+    out.write(f'{getcwd()}\n'.encode())
 
     return returncode, out, err
 
