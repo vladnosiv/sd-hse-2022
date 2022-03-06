@@ -1,10 +1,6 @@
 name: Python application
 
-on:
-  push:
-    branches: [ hw-3-grep ]
-  pull_request:
-    branches: [ vladnosiv:master ]
+on: [ push ]
 
 jobs:
   build:
