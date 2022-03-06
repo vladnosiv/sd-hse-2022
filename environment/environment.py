@@ -35,7 +35,6 @@ class EnvironmentHandler:
         return cls.__vars
 
 
-
 class Substitute():
     """
     A module with system variables that handles substitution and assignment commands.
@@ -105,7 +104,7 @@ class Substitute():
                     new_string += val
                     new_string.append(c)
             elif re.match(r'[0-9]', c) is not None and len(curr_var) == 1:
-                raise SubstituteException(f"Variable name can't start with digit") 
+                raise SubstituteException(f"Variable name can't start with digit")
             else:
                 if len(curr_var) > 0:
                     curr_var.append(c)
