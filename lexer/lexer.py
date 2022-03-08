@@ -1,5 +1,5 @@
 import re
-import ply.ply.lex as lex
+import plys.ply.lex as lex
 
 
 class Lexer:

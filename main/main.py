@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../')
 from io import BytesIO
-from ply.ply.lex import LexError
+from plys.ply.lex import LexError
 from cli import CLI
 from environment import Substitute, SubstituteException
 from command_parser import CommandParser, ParserException
