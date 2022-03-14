@@ -15,7 +15,7 @@ def test_zero_arg():
     assert err.getvalue() == b''
 
 
-def test_unexisting_path(tmp_path):
+def test_nonexistent_path(tmp_path):
     EnvironmentHandler.set_current_working_directory(tmp_path)
 
     code, out, err = shell_cd(BytesIO(), 'any-path')
