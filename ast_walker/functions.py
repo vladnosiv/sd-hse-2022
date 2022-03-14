@@ -1,10 +1,11 @@
-import os
-
-from ast_walker.holder import FunctionHolder
-from ast_walker.grep import grep
-from io import BytesIO, StringIO
-from environment import EnvironmentHandler
 import contextlib
+import os
+from io import BytesIO, StringIO
+from pathlib import Path
+
+from ast_walker.grep import grep
+from ast_walker.holder import FunctionHolder
+from environment import EnvironmentHandler
 
 
 # Usage: cat [FILE]
@@ -123,6 +124,9 @@ def shell_grep(input_stream, *args):
     return returncode, out, err
 
 
+# Usage: cd [DIRECTORY]
+# Changes the working directory to DIRECTORY.
+# If the argument was not provided, changes the working directory to the user's home directory.
 @FunctionHolder.shell_function('cd')
 def shell_cd(input_stream, *args):
     returncode = 0
@@ -130,7 +134,7 @@ def shell_cd(input_stream, *args):
     err = BytesIO()
 
     if len(args) == 0:
-        args = ['.']
+        args = [str(Path.home())]
 
     if len(args) == 1:
         path = EnvironmentHandler.resolve_path(args[0])
@@ -146,6 +150,9 @@ def shell_cd(input_stream, *args):
     return returncode, out, err
 
 
+# Usage: ls [DIRECTORY]
+# List DIRECTORY contents.
+# If the argument was not provided, lists current working directory contents.
 @FunctionHolder.shell_function('ls')
 def shell_ls(input_stream, *args):
     returncode = 0
