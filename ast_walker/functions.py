@@ -162,9 +162,12 @@ def shell_ls(input_stream, *args):
         content = os.listdir(EnvironmentHandler.get_current_working_directory())
     elif len(args) == 1:
         path = EnvironmentHandler.resolve_path(args[0])
-        try:
-            content = os.listdir(path)
-        except FileNotFoundError:
+        if os.path.exists(path):
+            if os.path.isdir(path):
+                content = os.listdir(path)
+            else:
+                content = [path.name]
+        else:
             err.write(b'Directory not found')
             return 1, out, err
     else:
