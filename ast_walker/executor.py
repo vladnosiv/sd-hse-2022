@@ -1,12 +1,17 @@
+import os
+
 from ast_walker.holder import FunctionHolder
 from io import BytesIO
 import subprocess
+
+from environment import EnvironmentHandler
 
 
 class FunctionExecutor:
     '''
         Executes the function passed to it with the specified parameters
     '''
+
     @staticmethod
     def execute_function(name, input_stream, *args):
         '''
@@ -25,10 +30,11 @@ class FunctionExecutor:
                     arguments = list(args)
                 arguments = ' '.join(arguments)
 
+                wd = EnvironmentHandler.get_current_working_directory()
                 if arguments == '':
-                    result = subprocess.run(name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    result = subprocess.run(name, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=wd)
                 else:
-                    result = subprocess.run([name, arguments], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    result = subprocess.run([name, arguments], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=wd)
 
                 return result.returncode, BytesIO(result.stdout), BytesIO(result.stderr)
             except:
