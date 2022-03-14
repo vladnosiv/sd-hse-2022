@@ -143,6 +143,7 @@ def shell_cd(input_stream, *args):
             err.write(msg)
             return 1, out, err
         EnvironmentHandler.set_current_working_directory(path)
+        os.chdir(path)
     else:
         err.write(b'args must contain one filename')
         return 1, out, err
